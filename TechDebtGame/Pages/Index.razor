@@ -1,30 +1,56 @@
 ﻿@page "/"
 
-<h1>The Technical Debt Game</h1>
-
-<h3>Gameplay Instructions</h3>
-<p>
-    Each team should have a Tech Debt Game Chart. The theoretical capacity is always 60 points.
-    You will require the supporting document of iteration scenarios in order to run this simulated example.
-</p>
-<ol>
-    <li>Add up the Impact of all currently outstanding Tech Debt cards. For the first iteration, this will always be 35 points. Record this on the chart under Technical Debt Impact as -35 points. Compute the actual capacity for the team for this iteration (which will be 25 points in the first iteration).</li>
-    <li>Plot the Technical Debt Impact on the chart (35 points for the first iteration).</li>
-    <li>Plan your iteration by selecting how many points to spend on Features and how many to spend eliminating Tech Debt (each Tech Debt card has a Cost, which is the number of points required to resolve it). The total points you can spend in any iteration must be equal to the Actual Capacity from step #1.</li>
-    <li>Have the team select a random number between 1-10. Read the corresponding scenario from the scenarios document and then add the required changes to the Iteration table in the bottom left of this board.</li>
-</ol>
-<p>Repeat these steps for 5 Iterations, with the goal to maximize the Feature Story Points completed.</p>
-
-
 <Container>
+    <h1>The Technical Debt Game</h1>
+
+    <h3>Gameplay Instructions</h3>
+    <p>
+        Each team should have a Tech Debt Game Chart. The theoretical capacity is always 60 points.
+        You will require the supporting document of iteration scenarios in order to run this simulated example.
+    </p>
+    <ol>
+        <li>Add up the Impact of all currently outstanding Tech Debt cards. For the first iteration, this will always be 35 points. Record this on the chart under Technical Debt Impact as -35 points. Compute the actual capacity for the team for this iteration (which will be 25 points in the first iteration).</li>
+        <li>Plot the Technical Debt Impact on the chart (35 points for the first iteration).</li>
+        <li>Plan your iteration by selecting how many points to spend on Features and how many to spend eliminating Tech Debt (each Tech Debt card has a Cost, which is the number of points required to resolve it). The total points you can spend in any iteration must be equal to the Actual Capacity from step #1.</li>
+        <li>Have the team select a random number between 1-10. Read the corresponding scenario from the scenarios document and then add the required changes to the Iteration table in the bottom left of this board.</li>
+    </ol>
+    <p>Repeat these steps for 5 Iterations, with the goal to maximize the Feature Story Points completed.</p>
+
+
     <Row>
         <Column ColumnSize="ColumnSize.Is4">
             <div id="iterationCards">
-                <Card Background="Background.Primary">
-                    <CardBody>
-                        <CardTitle>Next Iteration</CardTitle>
-                    </CardBody>
-                </Card>
+                <Button Color="Color.Primary" Clicked="@StartNewIteration">
+                    Next Iteration
+                </Button>
+            </div>
+        </Column>
+        <Column ColumnSize="ColumnSize.Is2.WithOffset">
+            <div id="currentScenario">
+                <Alert Color="Color.Info" Visible="true">
+                    <Heading Size="HeadingSize.Is4" TextColor="TextColor.Success">
+                        Iteration @CurrentIteration.Number
+                    </Heading>
+                    <Paragraph>
+                        @CurrentIteration.Card.Scenario
+                    </Paragraph>
+                    <Row>
+                        <Column ColumnSize="ColumnSize.Is6">
+                            <Card>
+                                <CardBody>
+                                    <CardTitle Size="5">Cost = @CurrentIteration.Card.Cost</CardTitle>
+                                </CardBody>
+                            </Card>
+                        </Column>
+                        <Column ColumnSize="ColumnSize.Is6">
+                            <Card>
+                                <CardBody>
+                                    <CardTitle Size="5">Impact = @CurrentIteration.Card.Impact</CardTitle>
+                                </CardBody>
+                            </Card>
+                        </Column>
+                    </Row>
+                </Alert>
             </div>
         </Column>
     </Row>
@@ -52,7 +78,7 @@
                         <TableRow>
                             <TableRowHeader>@iteration.Number</TableRowHeader>
                             <TableRowCell>@iteration.TotalCapacity</TableRowCell>
-                            <TableRowCell>-1,000,000</TableRowCell>
+                            <TableRowCell>@iteration.TechDebtImpactOnCapacity</TableRowCell>
                             <TableRowCell>@iteration.AvailableCapacity</TableRowCell>
                             <TableRowCell>@iteration.FeaturePointsComplete</TableRowCell>
                         </TableRow>
@@ -67,28 +93,26 @@
 
         private const int TeamTotalCapacity = 60;
     private List<Iteration> iterations;
-    private List<IterationCard> iterationCards;
+    private Stack<IterationCard> iterationCards;
+    private Iteration CurrentIteration => iterations.Last();
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        InitialiseIterations();
         PrepareIterationCards();
+        InitialiseIterations();
     }
 
     private void InitialiseIterations()
     {
         iterations = new List<Iteration>();
-        for (var i = 0; i < 5; i++)
-        {
-            iterations.Add(new Iteration {TotalCapacity = TeamTotalCapacity, Number = i + 1});
-        }
+        StartNewIteration();
     }
 
     private void PrepareIterationCards()
     {
-        iterationCards = new List<IterationCard>
+        var cards = new[]
         {
             new IterationCard {Cost = 0, Impact = 0, Scenario = "The team implemented features cleanly, with good design and no direct tradeoffs. No new debt recorded!"},
             new IterationCard {Cost = 10, Impact = -5, Scenario = "Database is getting large and complex. We need to add automated migrations to reduce manual work and support refactoring."},
@@ -102,7 +126,24 @@
             new IterationCard {Cost = 5, Impact = -5, Scenario = "The application is using an older version of a 3rd party library and it should be updated."}
         };
 
+        iterationCards = new Stack<IterationCard>(cards);
         iterationCards.Shuffle();
+    }
+
+    private void StartNewIteration()
+    {
+        var currentTechDebt = -35;
+        var availableCapacity = TeamTotalCapacity - currentTechDebt;
+        var randomScenario = iterationCards.Pop();
+
+        iterations.Add(new Iteration
+        {
+            Number = iterations.Count + 1,
+            Card = randomScenario,
+            TotalCapacity = TeamTotalCapacity,
+            TechDebtImpactOnCapacity = currentTechDebt,
+            AvailableCapacity = availableCapacity
+        });
     }
 
 }
