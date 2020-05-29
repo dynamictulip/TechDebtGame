@@ -1,7 +1,58 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<h1>The Technical Debt Game</h1>
 
-Welcome to your new app.
+<div id="gameboard">
+    <h3>Gameboard</h3>
+    <div id="technicalDebtCards"></div>
+    <div id="iterationCards"></div>
+    <div id="featureCards_Cost15"></div>
+    <div id="featureCards_Cost10"></div>
+    <div id="featureCards_Cost5"></div>
+</div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<div id="gameChart">
+    <Table Narrow="true">
+        <TableHeader>
+            <TableRow>
+                <TableHeaderCell>Iteration number</TableHeaderCell>
+                <TableHeaderCell>Team total capacity</TableHeaderCell>
+                <TableHeaderCell>Tech debt impact on capacity</TableHeaderCell>
+                <TableHeaderCell>Available capacity</TableHeaderCell>
+                <TableHeaderCell>Feature points complete</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @foreach (var iteration in iterations)
+            {
+                <TableRow>
+                    <TableRowHeader>@iteration.Number</TableRowHeader>
+                    <TableRowCell>@iteration.TotalCapacity</TableRowCell>
+                    <TableRowCell>-1,000,000</TableRowCell>
+                    <TableRowCell>@iteration.AvailableCapacity</TableRowCell>
+                    <TableRowCell>@iteration.FeaturePointsComplete</TableRowCell>
+                </TableRow>
+            }
+        </TableBody>
+    </Table>
+</div>
+
+
+@code {
+
+    private const int TeamTotalCapacity = 60;
+
+    private List<Iteration> iterations;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        iterations = new List<Iteration>();
+        for (int i = 0; i < 5; i++)
+        {
+            iterations.Add(new Iteration() { TotalCapacity = TeamTotalCapacity, Number = i + 1 });
+        }
+    }
+
+}
