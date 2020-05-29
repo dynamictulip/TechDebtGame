@@ -3,7 +3,19 @@
 <h1>The Technical Debt Game</h1>
 
 <div id="gameboard">
-    <h3>Gameboard</h3>
+    <h3>Gameplay Instructions</h3>
+    <p>
+        Each team should have a Tech Debt Game Chart. The theoretical capacity is always 60 points.
+        You will require the supporting document of iteration scenarios in order to run this simulated example.
+    </p>
+    <ol>
+        <li>Add up the Impact of all currently outstanding Tech Debt cards. For the first iteration, this will always be 35 points. Record this on the chart under Technical Debt Impact as -35 points. Compute the actual capacity for the team for this iteration (which will be 25 points in the first iteration).</li>
+        <li>Plot the Technical Debt Impact on the chart (35 points for the first iteration).</li>
+        <li>Plan your iteration by selecting how many points to spend on Features and how many to spend eliminating Tech Debt (each Tech Debt card has a Cost, which is the number of points required to resolve it). The total points you can spend in any iteration must be equal to the Actual Capacity from step #1.</li>
+        <li>Have the team select a random number between 1-10. Read the corresponding scenario from the scenarios document and then add the required changes to the Iteration table in the bottom left of this board.</li>
+    </ol> 
+    <p>Repeat these steps for 5 Iterations, with the goal to maximize the Feature Story Points completed.</p>
+    
     <div id="technicalDebtCards"></div>
     <div id="iterationCards"></div>
     <div id="featureCards_Cost15"></div>
