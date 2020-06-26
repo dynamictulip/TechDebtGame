@@ -169,6 +169,8 @@
     {
         _cardManager = new CardManager();
         _iterationManager = new IterationManager(_cardManager);
+
+        _cardManager.CardMovedCallback = _iterationManager.UpdateCurrentIteration;
     }
 
     private void ShowModal()

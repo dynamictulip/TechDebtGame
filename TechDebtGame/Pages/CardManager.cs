@@ -126,7 +126,11 @@ namespace TechDebtGame.Pages
                 default:
                     throw new ArgumentOutOfRangeException(nameof(moveToList), moveToList, null);
             }
+
+            CardMovedCallback.Invoke();
         }
+
+        public Action CardMovedCallback { get; set; }
 
         public List<GameCardModel> GetCards(GameCardListType GameCardListType)
         {

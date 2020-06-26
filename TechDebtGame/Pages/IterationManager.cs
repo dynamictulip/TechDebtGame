@@ -38,5 +38,12 @@ namespace TechDebtGame.Pages
                 AvailableCapacity = availableCapacity
             });
         }
+
+        public void UpdateCurrentIteration()
+        {
+            var costOfCurrentSprint = _cardManager.CardsSelectedForIteration.Sum(c => c.Cost);
+            CurrentIteration.AvailableCapacity = CurrentIteration.TechDebtImpactOnCapacity +
+                                                 CurrentIteration.TotalCapacity - costOfCurrentSprint;
+        }
     }
 }
