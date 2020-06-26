@@ -7,8 +7,8 @@ namespace TechDebtGame.Model
 {
     public class IterationCard
     {
-        public int Cost { get; set; }
         public string Scenario { get; set; }
-        public int Impact { get; set; }
+
+        public TechDebtCard TechDebtCard { get; set; }
     }
 }
