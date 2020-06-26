@@ -29,7 +29,7 @@ namespace TechDebtGame.Pages
             Iterations.Add(new Iteration
             {
                 Number = Iterations.Count + 1,
-                Card = randomScenario,
+                GameCard = randomScenario,
                 TotalCapacity = TeamTotalCapacity,
                 TechDebtImpactOnCapacity = currentTechDebt,
                 AvailableCapacity = availableCapacity
