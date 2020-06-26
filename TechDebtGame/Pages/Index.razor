@@ -52,23 +52,23 @@
     </Modal>
 
     <Row>
-        <Column ColumnSize="ColumnSize.Is4">
+        <Column ColumnSize="ColumnSize.Is2">
             <div id="iterationCards">
-                <Button Color="Color.Primary" Clicked="@EndIteration">
+                <Button Color="Color.Primary" Clicked="@EndIteration" Block="true">
                     Next Iteration
                 </Button>
             </div>
 
         </Column>
-        <Column ColumnSize="ColumnSize.Is6">
-            <Table Narrow="true" Hoverable="true">
+        <Column ColumnSize="ColumnSize.Is10">
+            <Table Narrow="true" Hoverable="true" >
                 <TableHeader>
                     <TableRow>
-                        <TableHeaderCell>Iteration number</TableHeaderCell>
-                        <TableHeaderCell>Team total capacity</TableHeaderCell>
-                        <TableHeaderCell>Tech debt impact on capacity</TableHeaderCell>
-                        <TableHeaderCell>Available capacity</TableHeaderCell>
-                        <TableHeaderCell>Feature points complete</TableHeaderCell>
+                        <TableHeaderCell><Text Alignment="TextAlignment.Center">Iteration number</Text></TableHeaderCell>
+                        <TableHeaderCell><Text Alignment="TextAlignment.Center">Team total capacity</Text></TableHeaderCell>
+                        <TableHeaderCell><Text Alignment="TextAlignment.Center">Tech debt impact on capacity</Text></TableHeaderCell>
+                        <TableHeaderCell><Text Alignment="TextAlignment.Center">Available capacity</Text></TableHeaderCell>
+                        <TableHeaderCell><Text Alignment="TextAlignment.Center">Feature points complete</Text></TableHeaderCell>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -77,21 +77,21 @@
                         @if (iteration == _iterationManager.CurrentIteration)
                         {
                             <TableRow Background=Background.Danger TextColor=TextColor.White>
-                                <TableRowHeader>Proposed @iteration.Number</TableRowHeader>
-                                <TableRowCell>@iteration.TotalCapacity</TableRowCell>
-                                <TableRowCell>@iteration.TechDebtImpactOnCapacity</TableRowCell>
-                                <TableRowCell>@iteration.AvailableCapacity</TableRowCell>
-                                <TableRowCell>@iteration.FeaturePointsComplete</TableRowCell>
+                                <TableRowHeader><Text Alignment="TextAlignment.Center">Proposed @iteration.Number</Text></TableRowHeader>
+                                <TableRowCell><Text Alignment="TextAlignment.Center">@iteration.TotalCapacity</Text></TableRowCell>
+                                <TableRowCell><Text Alignment="TextAlignment.Center">@iteration.TechDebtImpactOnCapacity</Text></TableRowCell>
+                                <TableRowCell><Text Alignment="TextAlignment.Center">@iteration.AvailableCapacity</Text></TableRowCell>
+                                <TableRowCell><Text Alignment="TextAlignment.Center">@iteration.FeaturePointsComplete</Text></TableRowCell>
                             </TableRow>
                         }
                         else
                         {
                             <TableRow>
-                                <TableRowHeader>@iteration.Number</TableRowHeader>
-                                <TableRowCell>@iteration.TotalCapacity</TableRowCell>
-                                <TableRowCell>@iteration.TechDebtImpactOnCapacity</TableRowCell>
-                                <TableRowCell>@iteration.AvailableCapacity</TableRowCell>
-                                <TableRowCell>@iteration.FeaturePointsComplete</TableRowCell>
+                                <TableRowHeader><Text Alignment="TextAlignment.Center">@iteration.Number</Text></TableRowHeader>
+                                <TableRowCell><Text Alignment="TextAlignment.Center">@iteration.TotalCapacity</Text></TableRowCell>
+                                <TableRowCell><Text Alignment="TextAlignment.Center">@iteration.TechDebtImpactOnCapacity</Text></TableRowCell>
+                                <TableRowCell><Text Alignment="TextAlignment.Center">@iteration.AvailableCapacity</Text></TableRowCell>
+                                <TableRowCell><Text Alignment="TextAlignment.Center">@iteration.FeaturePointsComplete</Text></TableRowCell>
                             </TableRow>
                         }
                     }
