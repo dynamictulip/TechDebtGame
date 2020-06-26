@@ -1,7 +1,7 @@
 ﻿@using TechDebtGame.Pages
 <div>
     <CascadingValue Value="this">
-        <CascadingValue Value="CardManager">
+        <CascadingValue Value="GameManager">
             @ChildContent
         </CascadingValue>
     </CascadingValue>
@@ -10,7 +10,7 @@
 @code {
 
     [Parameter]
-    public CardManager CardManager { get; set; }
+    public GameManager GameManager { get; set; }
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
@@ -24,7 +24,7 @@
     {
         var cardModel = Payload;
 
-        CardManager.MoveCard(cardModel, gameCardListType);
+        GameManager.MoveCard(cardModel, gameCardListType);
 
         await OnStatusUpdated.InvokeAsync(Payload);
     }

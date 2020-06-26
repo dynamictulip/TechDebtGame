@@ -25,7 +25,7 @@
     GameCardListContainer Container { get; set; }
 
     [CascadingParameter]
-    public CardManager CardManager { get; set; }
+    public GameManager GameManager { get; set; }
 
     [Parameter]
     public GameCardListType GameCardListType { get; set; }
@@ -39,7 +39,7 @@
 
     protected override void OnParametersSet()
     {
-        CardsInList = CardManager.GetCards(GameCardListType);
+        CardsInList = GameManager.GetCards(GameCardListType);
     }
 
     private void HandleDragEnter()

@@ -14,23 +14,23 @@
         <ModalBackdrop/>
         <ModalContent Centered="true">
             <ModalHeader>
-                <ModalTitle> End of IterationModel @_iterationManager.LastIteration.Number</ModalTitle>
+                <ModalTitle> End of IterationModel @_gameManager.LastIteration.Number</ModalTitle>
                 <CloseButton Clicked="@HideModal"/>
             </ModalHeader>
             <ModalBody>
                 <Container Fluid="true">
                     <Row>
-                        @_iterationManager.LastIteration.GameCardModel.Scenario
+                        @_gameManager.LastIteration.GameCardModel.Scenario
                     </Row>
                     <Row>
                         <Column ColumnSize="ColumnSize.Is6.Is3.WithOffset">
-                            @if (_iterationManager.LastIteration.GameCardModel.Cost > 0)
+                            @if (_gameManager.LastIteration.GameCardModel.Cost > 0)
                             {
                                 <Card Margin="Margin.Is3">
                                     <CardHeader>New Tech Debt</CardHeader>
                                     <CardBody>
-                                        <CardText>Cost = @_iterationManager.LastIteration.GameCardModel.Cost</CardText>
-                                        <CardText>Impact = @_iterationManager.LastIteration.GameCardModel.Impact</CardText>
+                                        <CardText>Cost = @_gameManager.LastIteration.GameCardModel.Cost</CardText>
+                                        <CardText>Impact = @_gameManager.LastIteration.GameCardModel.Impact</CardText>
                                     </CardBody>
                                 </Card>
                             }
@@ -82,9 +82,9 @@
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    @foreach (var iteration in _iterationManager.Iterations)
+                    @foreach (var iteration in _gameManager.Iterations)
                     {
-                        @if (iteration == _iterationManager.CurrentIteration)
+                        @if (iteration == _gameManager.CurrentIteration)
                         {
                             <TableRow Background=Background.Danger TextColor=TextColor.White>
                                 <TableRowHeader>
@@ -133,10 +133,10 @@
     <Row>
         <Column ColumnSize="ColumnSize.Is12">
             <Heading Size="HeadingSize.Is4" TextColor="TextColor.Primary">
-                Proposed IterationModel @_iterationManager.CurrentIteration.Number
+                Proposed IterationModel @_gameManager.CurrentIteration.Number
             </Heading>
 
-            <GameCardListContainer CardManager="@_cardManager" OnStatusUpdated="CardsMoved">
+            <GameCardListContainer GameManager="@_gameManager" OnStatusUpdated="CardsMoved">
                 <Row>
                     <Column ColumnSize="ColumnSize.Is4">
                         <GameCardList GameCardListType="GameCardListType.OutstandingTechDebt">
@@ -162,17 +162,8 @@
 @code {
     private Modal _endOfIterationModal;
 
-    private readonly IterationManager _iterationManager;
-    private readonly CardManager _cardManager;
-
-    public Index()
-    {
-        _cardManager = new CardManager();
-        _iterationManager = new IterationManager(_cardManager);
-
-        _cardManager.CardMovedCallback = _iterationManager.UpdateCurrentIteration;
-    }
-
+    private readonly GameManager _gameManager = new GameManager();
+    
     private void ShowModal()
     {
         _endOfIterationModal.Show();
@@ -185,7 +176,7 @@
 
     public void EndIteration()
     {
-        _iterationManager.StartNewIteration();
+        _gameManager.StartNewIteration();
         ShowModal();
     }
 

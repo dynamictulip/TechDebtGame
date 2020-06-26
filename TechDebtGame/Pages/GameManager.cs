@@ -6,18 +6,49 @@ using TechDebtGame.Shared;
 
 namespace TechDebtGame.Pages
 {
-    public class CardManager
+    public class GameManager
     {
+        private const int TeamTotalCapacity = 60;
         public List<GameCardModel> CardsSelectedForIteration = new List<GameCardModel>();
         public List<TechDebtGameCardModel> OutstandingTechDebt;
 
-        public CardManager()
+        public GameManager()
         {
-            InitialiseIterationCards();
             InitialiseTechDebt();
+            InitialiseIterationCards();
+            StartNewIteration();
         }
 
+        public List<IterationModel> Iterations { get; } = new List<IterationModel>();
+        public IterationModel CurrentIteration => Iterations.Last();
+        public IterationModel LastIteration => Iterations.Count > 1 ? Iterations[^2] : IterationModel.Empty;
         public Stack<TechDebtGameCardModel> IterationCards { get; private set; }
+
+        public void StartNewIteration()
+        {
+            if (Iterations.Any())
+                OutstandingTechDebt.Add(CurrentIteration.GameCardModel);
+
+            var currentTechDebt = OutstandingTechDebt.Sum(d => d.Impact);
+            var availableCapacity = TeamTotalCapacity + currentTechDebt;
+            var randomScenario = IterationCards.Pop();
+
+            Iterations.Add(new IterationModel
+            {
+                Number = Iterations.Count + 1,
+                GameCardModel = randomScenario,
+                TotalCapacity = TeamTotalCapacity,
+                TechDebtImpactOnCapacity = currentTechDebt,
+                AvailableCapacity = availableCapacity
+            });
+        }
+
+        public void UpdateCurrentIteration()
+        {
+            var costOfCurrentSprint = CardsSelectedForIteration.Sum(c => c.Cost);
+            CurrentIteration.AvailableCapacity = CurrentIteration.TechDebtImpactOnCapacity +
+                CurrentIteration.TotalCapacity - costOfCurrentSprint;
+        }
 
         public void InitialiseTechDebt()
         {
@@ -127,18 +158,16 @@ namespace TechDebtGame.Pages
                     throw new ArgumentOutOfRangeException(nameof(moveToList), moveToList, null);
             }
 
-            CardMovedCallback.Invoke();
+            UpdateCurrentIteration();
         }
 
-        public Action CardMovedCallback { get; set; }
-
-        public List<GameCardModel> GetCards(GameCardListType GameCardListType)
+        public List<GameCardModel> GetCards(GameCardListType gameCardListType)
         {
-            return GameCardListType switch
+            return gameCardListType switch
             {
                 GameCardListType.Iteration => CardsSelectedForIteration.ToList(),
                 GameCardListType.OutstandingTechDebt => OutstandingTechDebt.OfType<GameCardModel>().ToList(),
-                _ => throw new ArgumentOutOfRangeException(nameof(GameCardListType), GameCardListType, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(gameCardListType), gameCardListType, null)
             };
         }
     }
