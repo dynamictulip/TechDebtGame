@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace TechDebtGame.Model
 {
-    public class IterationCard
+    public class Card
     {
         public string Scenario { get; set; }
-
-        public TechDebtCard TechDebtCard { get; set; }
     }
 }

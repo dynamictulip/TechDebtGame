@@ -29,16 +29,16 @@
                         @_iterationManager.LastIteration.Card.Scenario
                     </Row>
                     <Row Margin="Margin.Is3">
-                        @if (_iterationManager.LastIteration.Card.TechDebtCard.Cost > 0)
+                        @if (_iterationManager.LastIteration.Card.Cost > 0)
                         {
 
                             <CardHeader>New Tech Debt</CardHeader>
                             <CardBody>
                                 <Column ColumnSize="ColumnSize.Is6">
-                                    <Text Size="5">Cost = @_iterationManager.LastIteration.Card.TechDebtCard.Cost</Text>
+                                    <Text Size="5">Cost = @_iterationManager.LastIteration.Card.Cost</Text>
                                 </Column>
                                 <Column>
-                                    <Text Size="5">Impact = @_iterationManager.LastIteration.Card.TechDebtCard.Impact</Text>
+                                    <Text Size="5">Impact = @_iterationManager.LastIteration.Card.Impact</Text>
                                 </Column>
                             </CardBody>
                         }
@@ -76,7 +76,7 @@
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    @foreach (var iteration in _iterationManager.iterations)
+                    @foreach (var iteration in _iterationManager.Iterations)
                     {
                         <TableRow>
                             <TableRowHeader>@iteration.Number</TableRowHeader>
@@ -90,6 +90,8 @@
             </Table>
         </Column>
     </Row>
+    
+
 
     <div id="technicalDebtCards"></div>
     <div id="featureCards_Cost15"></div>
@@ -122,18 +124,11 @@
 @code {
     private Modal _endOfIterationModal;
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        _iterationManager.InitialiseIterations();
-    }
-
     private readonly IterationManager _iterationManager;
 
     public Index()
     {
-        _iterationManager = new IterationManager();
+        _iterationManager = new IterationManager(new CardManager());
     }
 
 
