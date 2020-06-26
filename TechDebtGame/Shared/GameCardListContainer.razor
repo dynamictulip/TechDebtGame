@@ -1,0 +1,32 @@
+﻿@using TechDebtGame.Pages
+<div>
+    <CascadingValue Value="this">
+        <CascadingValue Value="CardManager">
+            @ChildContent
+        </CascadingValue>
+    </CascadingValue>
+</div>
+
+@code {
+
+    [Parameter]
+    public CardManager CardManager { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<GameCardModel> OnStatusUpdated { get; set; }
+
+    public GameCardModel Payload { get; set; }
+
+    public async Task UpdateCardAsync(CardListType cardListType)
+    {
+        var cardModel = Payload;
+
+        CardManager.MoveCard(cardModel, cardListType);
+
+        await OnStatusUpdated.InvokeAsync(Payload);
+    }
+
+}

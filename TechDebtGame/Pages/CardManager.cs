@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TechDebtGame.Model;
+using TechDebtGame.Shared;
 
 namespace TechDebtGame.Pages
 {
     public class CardManager
     {
+        public List<GameCardModel> CardsSelectedForIteration = new List<GameCardModel>();
         public List<TechDebtGameCardModel> OutstandingTechDebt;
 
         public CardManager()
@@ -19,15 +23,15 @@ namespace TechDebtGame.Pages
         {
             OutstandingTechDebt = new List<TechDebtGameCardModel>(new[]
                 {
-                    new TechDebtGameCardModel {Cost = 15, Impact = -10, Scenario = "Automate Acceptance Tests"},
                     new TechDebtGameCardModel {Cost = 5, Impact = -5, Scenario = "Refactor core code"},
-                    new TechDebtGameCardModel {Cost = 5, Impact = -5, Scenario = "Setup continuous integration environment"},
+                    new TechDebtGameCardModel
+                        {Cost = 5, Impact = -5, Scenario = "Setup continuous integration environment"},
+                    new TechDebtGameCardModel {Cost = 10, Impact = -5, Scenario = "Automate deployment"},
                     new TechDebtGameCardModel {Cost = 15, Impact = -10, Scenario = "Automate Unit Tests"},
-                    new TechDebtGameCardModel {Cost = 10, Impact = -5, Scenario = "Automate deployment"}
+                    new TechDebtGameCardModel {Cost = 15, Impact = -10, Scenario = "Automate Acceptance Tests"}
                 }
             );
         }
-
 
         public void InitialiseIterationCards()
         {
@@ -96,6 +100,42 @@ namespace TechDebtGame.Pages
             });
 
             IterationCards.Shuffle();
+        }
+
+        public void MoveCard(GameCardModel cardModel, CardListType moveToList)
+        {
+            switch (moveToList)
+            {
+                case CardListType.Iteration:
+
+                    if (OutstandingTechDebt.Contains(cardModel))
+                        OutstandingTechDebt.Remove(cardModel as TechDebtGameCardModel);
+
+                    if (!CardsSelectedForIteration.Contains(cardModel))
+                        CardsSelectedForIteration.Add(cardModel);
+                    break;
+
+                case CardListType.OutstandingTechDebt:
+                    if (CardsSelectedForIteration.Contains(cardModel))
+                        CardsSelectedForIteration.Remove(cardModel);
+
+                    if (!OutstandingTechDebt.Contains(cardModel))
+                        OutstandingTechDebt.Add(cardModel as TechDebtGameCardModel);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(moveToList), moveToList, null);
+            }
+        }
+
+        public List<GameCardModel> GetCards(CardListType cardListType)
+        {
+            return cardListType switch
+            {
+                CardListType.Iteration => CardsSelectedForIteration.ToList(),
+                CardListType.OutstandingTechDebt => OutstandingTechDebt.OfType<GameCardModel>().ToList(),
+                _ => throw new ArgumentOutOfRangeException(nameof(cardListType), cardListType, null)
+            };
         }
     }
 }

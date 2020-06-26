@@ -1,0 +1,27 @@
+﻿
+<Card class="draggable" draggable="true" @ondragstart="HandleDragStart">
+    <CardHeader>@GameCardModel.Scenario</CardHeader>
+    <CardBody>
+        <CardText>Cost = @GameCardModel.Cost</CardText>
+        @if (GameCardModel is TechDebtGameCardModel)
+        {
+            <CardText>Impact = @(((TechDebtGameCardModel) GameCardModel).Impact)</CardText>
+        }
+    </CardBody>
+</Card>
+
+
+@code {
+
+    [CascadingParameter]
+    GameCardListContainer Container { get; set; }
+
+    [Parameter]
+    public GameCardModel GameCardModel { get; set; }
+    
+    private void HandleDragStart()
+    {
+        Container.Payload = GameCardModel;
+    }
+
+}
