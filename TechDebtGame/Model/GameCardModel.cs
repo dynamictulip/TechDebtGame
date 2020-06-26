@@ -1,6 +1,6 @@
 ﻿namespace TechDebtGame.Model
 {
-    public class GameCard
+    public class GameCardModel
     {
         public string Scenario { get; set; }
     }

@@ -12,27 +12,27 @@ namespace TechDebtGame.Pages
         public IterationManager(CardManager cardManager)
         {
             _cardManager = cardManager;
-            Iterations = new List<Iteration>();
+            Iterations = new List<IterationModel>();
             StartNewIteration();
         }
 
-        public List<Iteration> Iterations { get; private set; }
-        public Iteration CurrentIteration => Iterations.Last();
-        public Iteration LastIteration => Iterations.Count > 1 ? Iterations[^2] : Iteration.Empty;
+        public List<IterationModel> Iterations { get; private set; }
+        public IterationModel CurrentIteration => Iterations.Last();
+        public IterationModel LastIteration => Iterations.Count > 1 ? Iterations[^2] : IterationModel.Empty;
 
         public void StartNewIteration()
         {
             if (Iterations.Any())
-                _cardManager.OutstandingTechDebt.Add(CurrentIteration.GameCard);
+                _cardManager.OutstandingTechDebt.Add(CurrentIteration.GameCardModel);
 
             var currentTechDebt = _cardManager.OutstandingTechDebt.Sum(d => d.Impact);
             var availableCapacity = TeamTotalCapacity + currentTechDebt;
             var randomScenario = _cardManager.IterationCards.Pop();
 
-            Iterations.Add(new Iteration
+            Iterations.Add(new IterationModel
             {
                 Number = Iterations.Count + 1,
-                GameCard = randomScenario,
+                GameCardModel = randomScenario,
                 TotalCapacity = TeamTotalCapacity,
                 TechDebtImpactOnCapacity = currentTechDebt,
                 AvailableCapacity = availableCapacity
