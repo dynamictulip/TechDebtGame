@@ -22,8 +22,11 @@ namespace TechDebtGame.Pages
 
         public void StartNewIteration()
         {
-            var currentTechDebt = -35;
-            var availableCapacity = TeamTotalCapacity - currentTechDebt;
+            if (Iterations.Any())
+                _cardManager.OutstandingTechDebt.Add(CurrentIteration.GameCard);
+
+            var currentTechDebt = _cardManager.OutstandingTechDebt.Sum(d => d.Impact);
+            var availableCapacity = TeamTotalCapacity + currentTechDebt;
             var randomScenario = _cardManager.IterationCards.Pop();
 
             Iterations.Add(new Iteration
