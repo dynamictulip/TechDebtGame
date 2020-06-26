@@ -12,12 +12,13 @@
         @foreach (var card in CardsInList)
         {
             <li>
-                <GameCard GameCardModel=card/>
+                <GameCard GameCardModel=card />
             </li>
         }
 
     </ul>
 </div>
+
 @code {
 
     [CascadingParameter]
@@ -27,7 +28,7 @@
     public CardManager CardManager { get; set; }
 
     [Parameter]
-    public CardListType CardListType { get; set; }
+    public GameCardListType GameCardListType { get; set; }
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
@@ -38,7 +39,7 @@
 
     protected override void OnParametersSet()
     {
-        CardsInList = CardManager.GetCards(CardListType);
+        CardsInList = CardManager.GetCards(GameCardListType);
     }
 
     private void HandleDragEnter()
@@ -55,7 +56,7 @@
     {
         dropClass = "";
 
-        await Container.UpdateCardAsync(CardListType);
+        await Container.UpdateCardAsync(GameCardListType);
     }
 
 }

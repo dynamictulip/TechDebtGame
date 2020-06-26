@@ -1,6 +1,6 @@
 ﻿namespace TechDebtGame.Shared
 {
-    public enum CardListType
+    public enum GameCardListType
     {
         Iteration,
         OutstandingTechDebt

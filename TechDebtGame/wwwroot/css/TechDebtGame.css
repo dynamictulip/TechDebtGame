@@ -1,20 +1,4 @@
-﻿/** Simple drag and drop with Blazor CSS **/
-/*
-.jobs-container {
-    display: flex;
-    justify-content: space-around;
-}
-
-.job-status {
-    display: flex;
-    flex-direction: column;
-    width: 312px;
-}
-
-.job-status ul {
-    flex: 1;
-}
-*/
+﻿/**Dragging**/
 
 .dropzone {
     padding: 10px;
@@ -31,7 +15,6 @@
 }
 
 .draggable {
-    border: 1px solid #424d5c;
     cursor: grab;
     margin-bottom: 10px
 }
@@ -42,4 +25,9 @@
 
 .dragging {
     cursor: grabbing;
+}
+
+/**Cards**/
+.gameCard {
+    border: 1px solid #424d5c;
 }

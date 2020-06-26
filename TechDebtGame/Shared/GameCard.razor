@@ -1,11 +1,11 @@
 ﻿
-<Card class="draggable" draggable="true" @ondragstart="HandleDragStart">
+<Card class="@Style" draggable="true" @ondragstart="HandleDragStart">
     <CardHeader>@GameCardModel.Scenario</CardHeader>
     <CardBody>
         <CardText>Cost = @GameCardModel.Cost</CardText>
-        @if (GameCardModel is TechDebtGameCardModel)
+        @if (GameCardModel is TechDebtGameCardModel techDebtGameCardModel)
         {
-            <CardText>Impact = @(((TechDebtGameCardModel) GameCardModel).Impact)</CardText>
+            <CardText>Impact = @techDebtGameCardModel.Impact</CardText>
         }
     </CardBody>
 </Card>
@@ -18,10 +18,18 @@
 
     [Parameter]
     public GameCardModel GameCardModel { get; set; }
-    
+
+    [Parameter]
+    public string Style
+    {
+        get => $"{_style??""} gameCard draggable";
+        set => _style = value;
+    }
+
     private void HandleDragStart()
     {
         Container.Payload = GameCardModel;
     }
 
+    private string _style;
 }

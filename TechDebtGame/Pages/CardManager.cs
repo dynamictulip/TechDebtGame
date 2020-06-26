@@ -102,11 +102,11 @@ namespace TechDebtGame.Pages
             IterationCards.Shuffle();
         }
 
-        public void MoveCard(GameCardModel cardModel, CardListType moveToList)
+        public void MoveCard(GameCardModel cardModel, GameCardListType moveToList)
         {
             switch (moveToList)
             {
-                case CardListType.Iteration:
+                case GameCardListType.Iteration:
 
                     if (OutstandingTechDebt.Contains(cardModel))
                         OutstandingTechDebt.Remove(cardModel as TechDebtGameCardModel);
@@ -115,7 +115,7 @@ namespace TechDebtGame.Pages
                         CardsSelectedForIteration.Add(cardModel);
                     break;
 
-                case CardListType.OutstandingTechDebt:
+                case GameCardListType.OutstandingTechDebt:
                     if (CardsSelectedForIteration.Contains(cardModel))
                         CardsSelectedForIteration.Remove(cardModel);
 
@@ -128,13 +128,13 @@ namespace TechDebtGame.Pages
             }
         }
 
-        public List<GameCardModel> GetCards(CardListType cardListType)
+        public List<GameCardModel> GetCards(GameCardListType GameCardListType)
         {
-            return cardListType switch
+            return GameCardListType switch
             {
-                CardListType.Iteration => CardsSelectedForIteration.ToList(),
-                CardListType.OutstandingTechDebt => OutstandingTechDebt.OfType<GameCardModel>().ToList(),
-                _ => throw new ArgumentOutOfRangeException(nameof(cardListType), cardListType, null)
+                GameCardListType.Iteration => CardsSelectedForIteration.ToList(),
+                GameCardListType.OutstandingTechDebt => OutstandingTechDebt.OfType<GameCardModel>().ToList(),
+                _ => throw new ArgumentOutOfRangeException(nameof(GameCardListType), GameCardListType, null)
             };
         }
     }
