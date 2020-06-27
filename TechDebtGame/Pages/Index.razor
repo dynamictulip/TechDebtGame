@@ -5,10 +5,13 @@
 
     <Heading Size="HeadingSize.Is3">Gameplay Instructions</Heading>
     <Paragraph>
-        Each team should have a Tech Debt Game Chart. The theoretical capacity is always 60 points.
-        You will require the supporting document of iteration scenarios in order to run this simulated example.
+        Drag and drop work items from the Tech Debt Register and the Outstanding Feature columns into the Proposed Work column.
     </Paragraph>
-    <Paragraph>Repeat these steps for 5 IterationModels, with the goal to maximize the Feature Story Points completed.</Paragraph>
+    <Paragraph>Every work item has a cost to complete, this is paid for in the Available Capacity</Paragraph>
+    <Paragraph>
+        Outstanding Technical Debt items drain the team's capacity
+    </Paragraph>
+    <Paragraph>Repeat these steps for 5 Iterations, with the goal to maximize the Feature Story Points completed.</Paragraph>
 
     <Modal @ref="_endOfIterationModal">
         <ModalBackdrop/>
@@ -26,7 +29,7 @@
                         <Column ColumnSize="ColumnSize.Is6.Is3.WithOffset">
                             @if (_gameManager.LastIteration.GameCardModel.Cost > 0)
                             {
-                                <Card Margin="Margin.Is3">
+                                <Card class="techdebtcard" Margin="Margin.Is3">
                                     <CardHeader>New Tech Debt</CardHeader>
                                     <CardBody>
                                         <CardText>Cost = @_gameManager.LastIteration.GameCardModel.Cost</CardText>
@@ -132,20 +135,17 @@
 
     <Row>
         <Column ColumnSize="ColumnSize.Is12">
-            <Heading Size="HeadingSize.Is4" TextColor="TextColor.Primary">
-                Proposed IterationModel @_gameManager.CurrentIteration.Number
-            </Heading>
 
             <GameCardListContainer GameManager="@_gameManager" OnStatusUpdated="CardsMoved">
                 <Row>
                     <Column ColumnSize="ColumnSize.Is4">
                         <GameCardList GameCardListType="GameCardListType.OutstandingTechDebt">
-                            <Heading Size="HeadingSize.Is5" TextColor="TextColor.Danger">Outstanding Tech Debt</Heading>
+                            <Heading Size="HeadingSize.Is5" TextColor="TextColor.Danger">Tech Debt Register</Heading>
                         </GameCardList>
                     </Column>
                     <Column ColumnSize="ColumnSize.Is4">
                         <GameCardList GameCardListType="GameCardListType.ProposedForIteration">
-                            <Heading Size="HeadingSize.Is5" TextColor="TextColor.Success">Things to tackle this iteration</Heading>
+                            <Heading Size="HeadingSize.Is4" TextColor="TextColor.Primary">Proposed work for Iteration @_gameManager.CurrentIteration.Number</Heading>
                         </GameCardList>
                     </Column>
                     <Column ColumnSize="ColumnSize.Is4">
@@ -163,7 +163,7 @@
     private Modal _endOfIterationModal;
 
     private readonly GameManager _gameManager = new GameManager();
-    
+
     private void ShowModal()
     {
         _endOfIterationModal.Show();
@@ -182,7 +182,7 @@
 
     private void CardsMoved()
     {
-        //This forces a repaint
+    //This forces a repaint
     }
 
 }

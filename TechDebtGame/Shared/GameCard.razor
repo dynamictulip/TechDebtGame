@@ -1,6 +1,6 @@
 ﻿
 <Card class="@Style" draggable="true" @ondragstart="HandleDragStart">
-    <CardHeader>@GameCardModel.Scenario</CardHeader>
+    <CardHeader>@(IsTechDebt? GameCardModel.Scenario : "Feature")</CardHeader>
     <CardBody>
         <CardText>Cost = @GameCardModel.Cost</CardText>
         @if (GameCardModel is TechDebtGameCardModel techDebtGameCardModel)
@@ -26,10 +26,22 @@
         set => _style = value;
     }
 
+    public bool IsTechDebt => GameCardModel is TechDebtGameCardModel;
+
+    protected override void OnParametersSet()
+    {
+        if (IsTechDebt)
+            _style += " techdebtcard";
+        else
+        {
+            _style += " featurecard";
+        }
+    }
+
     private void HandleDragStart()
     {
         Container.Payload = GameCardModel;
     }
 
-    private string _style;
+    private string _style = "";
 }
