@@ -2,7 +2,7 @@
 {
     public enum GameCardListType
     {
-        Iteration,
+        ProposedForIteration,
         OutstandingTechDebt
     }
 }

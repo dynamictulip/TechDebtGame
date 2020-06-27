@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TechDebtGame.Model;
 using TechDebtGame.Shared;
@@ -9,13 +8,18 @@ namespace TechDebtGame.Pages
     public class GameManager
     {
         private const int TeamTotalCapacity = 60;
-        public List<GameCardModel> CardsSelectedForIteration = new List<GameCardModel>();
-        public List<TechDebtGameCardModel> OutstandingTechDebt;
+
+        private readonly Dictionary<GameCardListType, List<GameCardModel>> _cardLists =
+            new Dictionary<GameCardListType, List<GameCardModel>>();
 
         public GameManager()
         {
+            _cardLists.Add(GameCardListType.ProposedForIteration, new List<GameCardModel>());
+            _cardLists.Add(GameCardListType.OutstandingTechDebt, new List<GameCardModel>());
+
             InitialiseTechDebt();
             InitialiseIterationCards();
+
             StartNewIteration();
         }
 
@@ -27,9 +31,10 @@ namespace TechDebtGame.Pages
         public void StartNewIteration()
         {
             if (Iterations.Any())
-                OutstandingTechDebt.Add(CurrentIteration.GameCardModel);
+                _cardLists[GameCardListType.OutstandingTechDebt].Add(CurrentIteration.GameCardModel);
 
-            var currentTechDebt = OutstandingTechDebt.Sum(d => d.Impact);
+            var currentTechDebt = _cardLists[GameCardListType.OutstandingTechDebt].OfType<TechDebtGameCardModel>()
+                .Sum(d => d.Impact);
             var availableCapacity = TeamTotalCapacity + currentTechDebt;
             var randomScenario = IterationCards.Pop();
 
@@ -45,14 +50,14 @@ namespace TechDebtGame.Pages
 
         public void UpdateCurrentIteration()
         {
-            var costOfCurrentSprint = CardsSelectedForIteration.Sum(c => c.Cost);
+            var costOfCurrentSprint = _cardLists[GameCardListType.ProposedForIteration].Sum(c => c.Cost);
             CurrentIteration.AvailableCapacity = CurrentIteration.TechDebtImpactOnCapacity +
                 CurrentIteration.TotalCapacity - costOfCurrentSprint;
         }
 
         public void InitialiseTechDebt()
         {
-            OutstandingTechDebt = new List<TechDebtGameCardModel>(new[]
+            _cardLists[GameCardListType.OutstandingTechDebt] = new List<GameCardModel>(new[]
                 {
                     new TechDebtGameCardModel {Cost = 5, Impact = -5, Scenario = "Refactor core code"},
                     new TechDebtGameCardModel
@@ -135,40 +140,16 @@ namespace TechDebtGame.Pages
 
         public void MoveCard(GameCardModel cardModel, GameCardListType moveToList)
         {
-            switch (moveToList)
-            {
-                case GameCardListType.Iteration:
+            foreach (var list in _cardLists.Values) list.Remove(cardModel);
 
-                    if (OutstandingTechDebt.Contains(cardModel))
-                        OutstandingTechDebt.Remove(cardModel as TechDebtGameCardModel);
-
-                    if (!CardsSelectedForIteration.Contains(cardModel))
-                        CardsSelectedForIteration.Add(cardModel);
-                    break;
-
-                case GameCardListType.OutstandingTechDebt:
-                    if (CardsSelectedForIteration.Contains(cardModel))
-                        CardsSelectedForIteration.Remove(cardModel);
-
-                    if (!OutstandingTechDebt.Contains(cardModel))
-                        OutstandingTechDebt.Add(cardModel as TechDebtGameCardModel);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(moveToList), moveToList, null);
-            }
+            _cardLists[moveToList].Add(cardModel);
 
             UpdateCurrentIteration();
         }
 
         public List<GameCardModel> GetCards(GameCardListType gameCardListType)
         {
-            return gameCardListType switch
-            {
-                GameCardListType.Iteration => CardsSelectedForIteration.ToList(),
-                GameCardListType.OutstandingTechDebt => OutstandingTechDebt.OfType<GameCardModel>().ToList(),
-                _ => throw new ArgumentOutOfRangeException(nameof(gameCardListType), gameCardListType, null)
-            };
+            return _cardLists[gameCardListType].ToList();
         }
     }
 }
