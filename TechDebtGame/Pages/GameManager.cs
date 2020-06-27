@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TechDebtGame.Model;
 using TechDebtGame.Shared;
@@ -14,8 +15,8 @@ namespace TechDebtGame.Pages
 
         public GameManager()
         {
-            _cardLists.Add(GameCardListType.ProposedForIteration, new List<GameCardModel>());
-            _cardLists.Add(GameCardListType.OutstandingTechDebt, new List<GameCardModel>());
+            foreach (GameCardListType type in Enum.GetValues(typeof(GameCardListType)))
+                _cardLists.Add(type, new List<GameCardModel>());
 
             InitialiseTechDebt();
             InitialiseIterationCards();
