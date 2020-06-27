@@ -46,10 +46,16 @@ stages:
   jobs:
   - job: Deploy
     steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'drop'
+        targetPath: '$(Pipeline.Workspace)'
+        
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
         azureSubscription: '$(azureSubscription)'
         appType: 'webApp'
         WebAppName: '$(webAppName)'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
