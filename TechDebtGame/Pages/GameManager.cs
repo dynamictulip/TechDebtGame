@@ -20,8 +20,26 @@ namespace TechDebtGame.Pages
 
             InitialiseTechDebt();
             InitialiseIterationCards();
+            InitialiseFeatures();
 
             StartNewIteration();
+        }
+
+        private void InitialiseFeatures()
+        {
+            _cardLists[GameCardListType.OutstandingFeatures] = new List<GameCardModel>(new[]
+                {
+                    new GameCardModel {Cost = 5},
+                    new GameCardModel {Cost = 5},
+                    new GameCardModel {Cost = 5},
+                    new GameCardModel {Cost = 10},
+                    new GameCardModel {Cost = 10},
+                    new GameCardModel {Cost = 10},
+                    new GameCardModel {Cost = 15},
+                    new GameCardModel {Cost = 15},
+                    new GameCardModel {Cost = 15}
+                }
+            );
         }
 
         public List<IterationModel> Iterations { get; } = new List<IterationModel>();
@@ -31,9 +49,11 @@ namespace TechDebtGame.Pages
 
         public void StartNewIteration()
         {
+            _cardLists[GameCardListType.ProposedForIteration].Clear();
+
             if (Iterations.Any())
                 _cardLists[GameCardListType.OutstandingTechDebt].Add(CurrentIteration.GameCardModel);
-
+            
             var currentTechDebt = _cardLists[GameCardListType.OutstandingTechDebt].OfType<TechDebtGameCardModel>()
                 .Sum(d => d.Impact);
             var availableCapacity = TeamTotalCapacity + currentTechDebt;
@@ -52,8 +72,12 @@ namespace TechDebtGame.Pages
         public void UpdateCurrentIteration()
         {
             var costOfCurrentSprint = _cardLists[GameCardListType.ProposedForIteration].Sum(c => c.Cost);
+            var featurePoints = _cardLists[GameCardListType.ProposedForIteration].Where(c => c.GetType() == typeof(GameCardModel))
+                .Sum(f => f.Cost);
+
             CurrentIteration.AvailableCapacity = CurrentIteration.TechDebtImpactOnCapacity +
                 CurrentIteration.TotalCapacity - costOfCurrentSprint;
+            CurrentIteration.FeaturePointsComplete = featurePoints;
         }
 
         public void InitialiseTechDebt()
