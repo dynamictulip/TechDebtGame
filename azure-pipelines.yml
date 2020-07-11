@@ -52,10 +52,11 @@ stages:
         artifactName: 'drop'
         targetPath: '$(Pipeline.Workspace)'
         
-    - task: AzureRmWebAppDeployment@4
+    - task: GitHubPagesPublish@1
       inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: '$(azureSubscription)'
-        appType: 'webApp'
-        WebAppName: '$(webAppName)'
-        packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
+        docPath: '$(Pipeline.Workspace)'
+        githubusername: 'AutomatedRelease'
+        githubaccesstoken: '$(githubPat)'
+        repositoryname: 'dynamictulip/TechDebtGame'
+        branchname: 'gh-pages'
+        commitmessage: 'Automated Release $(Release.ReleaseId)'
