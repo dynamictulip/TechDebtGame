@@ -1,6 +1,6 @@
 ﻿namespace TechDebtGame.Model
 {
-    internal class OutstandingFeaturesCardList : GameCardListModel
+    public class OutstandingFeaturesCardList : GameCardListModel
     {
         public OutstandingFeaturesCardList()
         {

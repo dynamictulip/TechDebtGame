@@ -20,11 +20,11 @@
 
     public IGameCardModel Payload { get; set; }
 
-    public async Task UpdateCardAsync(GameCardListType gameCardListType)
+    public async Task UpdateCardAsync(GameCardListModel gameCardList)
     {
         var cardModel = Payload;
 
-        if (GameManager.MoveCard(cardModel, gameCardListType))
+        if (GameManager.MoveCard(cardModel, gameCardList))
             await OnStatusUpdated.InvokeAsync(Payload);
     }
 

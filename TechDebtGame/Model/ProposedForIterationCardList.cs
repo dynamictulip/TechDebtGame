@@ -2,7 +2,7 @@
 
 namespace TechDebtGame.Model
 {
-    internal class ProposedForIterationCardList : GameCardListModel
+    public class ProposedForIterationCardList : GameCardListModel
     {
         public int FeaturePoints => Cards
             .Where(c => c.GetType() == typeof(GameCardModel))

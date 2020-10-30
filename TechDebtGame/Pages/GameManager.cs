@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TechDebtGame.Model;
 
@@ -9,28 +8,28 @@ namespace TechDebtGame.Pages
     {
         private const int TeamTotalCapacity = 60;
 
-        private readonly OutstandingFeaturesCardList _outstandingFeaturesCardList = new OutstandingFeaturesCardList();
-        private readonly OutstandingTechDebtCardList _outstandingTechDebtCardList = new OutstandingTechDebtCardList();
-        private readonly ProposedForIterationCardList _proposedForIterationCardList = new ProposedForIterationCardList();
+        public readonly OutstandingFeaturesCardList OutstandingFeaturesCardList = new OutstandingFeaturesCardList();
+        public readonly OutstandingTechDebtCardList OutstandingTechDebtCardList = new OutstandingTechDebtCardList();
+        public readonly ProposedForIterationCardList ProposedForIterationCardList = new ProposedForIterationCardList();
         private readonly IterationCardDeck _iterationCardDeck = new IterationCardDeck();
 
         public GameManager()
         {
             StartNewIteration();
         }
-        
+
         public List<IterationModel> Iterations { get; } = new List<IterationModel>();
         public IterationModel CurrentIteration => Iterations.Last();
         public IterationModel LastIteration => Iterations.Count > 1 ? Iterations[^2] : IterationModel.Empty;
 
         public void StartNewIteration()
         {
-            _proposedForIterationCardList.Clear();
+            ProposedForIterationCardList.Clear();
 
             if (Iterations.Any())
-                _outstandingTechDebtCardList.Add(CurrentIteration.GameCardModel);
+                OutstandingTechDebtCardList.Add(CurrentIteration.GameCardModel);
 
-            var currentTechDebt = _outstandingTechDebtCardList.TechDebtImpact;
+            var currentTechDebt = OutstandingTechDebtCardList.TechDebtImpact;
 
             Iterations.Add(new IterationModel
             {
@@ -44,52 +43,29 @@ namespace TechDebtGame.Pages
 
         public void UpdateCurrentIteration()
         {
-            CurrentIteration.AvailableCapacity = 
-                CurrentIteration.TechDebtImpactOnCapacity 
-                + CurrentIteration.TotalCapacity 
-                - _proposedForIterationCardList.Cost;
+            CurrentIteration.AvailableCapacity =
+                CurrentIteration.TechDebtImpactOnCapacity
+                + CurrentIteration.TotalCapacity
+                - ProposedForIterationCardList.Cost;
 
-            CurrentIteration.FeaturePointsComplete = _proposedForIterationCardList.FeaturePoints;
+            CurrentIteration.FeaturePointsComplete = ProposedForIterationCardList.FeaturePoints;
         }
-        
 
-        public bool MoveCard(IGameCardModel cardModel, GameCardListType moveToList)
+
+        public bool MoveCard(IGameCardModel cardModel, GameCardListModel listToMoveTo)
         {
-            if (!GetCardList(moveToList).WillAccept(cardModel))
+            if (!listToMoveTo.WillAccept(cardModel))
                 return false;
 
-            _proposedForIterationCardList.Remove(cardModel);
-            _outstandingFeaturesCardList.Remove(cardModel);
-            _outstandingTechDebtCardList.Remove(cardModel);
+            ProposedForIterationCardList.Remove(cardModel);
+            OutstandingFeaturesCardList.Remove(cardModel);
+            OutstandingTechDebtCardList.Remove(cardModel);
 
-            GetCardList(moveToList).Add(cardModel);
+            listToMoveTo.Add(cardModel);
 
             UpdateCurrentIteration();
 
             return true;
-        }
-
-        private GameCardListModel GetCardList(GameCardListType moveToList)
-        {
-            switch (moveToList)
-            {
-                case GameCardListType.ProposedForIteration:
-                    return _proposedForIterationCardList;
-
-                case GameCardListType.OutstandingTechDebt:
-                    return _outstandingTechDebtCardList;
-
-                case GameCardListType.OutstandingFeatures:
-                    return _outstandingFeaturesCardList;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(moveToList), moveToList, null);
-            }
-        }
-
-        public List<IGameCardModel> GetCards(GameCardListType gameCardListType)
-        {
-            return GetCardList(gameCardListType).Cards;
         }
     }
 }

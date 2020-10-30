@@ -2,7 +2,7 @@
 
 namespace TechDebtGame.Model
 {
-    internal class OutstandingTechDebtCardList : GameCardListModel
+    public class OutstandingTechDebtCardList : GameCardListModel
     {
         public OutstandingTechDebtCardList()
         {
