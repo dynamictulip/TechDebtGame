@@ -16,9 +16,9 @@
     public RenderFragment ChildContent { get; set; }
 
     [Parameter]
-    public EventCallback<GameCardModel> OnStatusUpdated { get; set; }
+    public EventCallback<IGameCardModel> OnStatusUpdated { get; set; }
 
-    public GameCardModel Payload { get; set; }
+    public IGameCardModel Payload { get; set; }
 
     public async Task UpdateCardAsync(GameCardListType gameCardListType)
     {
