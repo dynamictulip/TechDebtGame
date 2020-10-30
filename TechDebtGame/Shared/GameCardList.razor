@@ -9,7 +9,7 @@
         @ondragenter="HandleDragEnter"
         @ondragleave="HandleDragLeave">
 
-        @foreach (var card in CardsInList)
+        @foreach (var card in GameCardListModel.Cards)
         {
             <li>
                 <GameCard GameCardModel=card />
@@ -28,19 +28,12 @@
     public GameManager GameManager { get; set; }
 
     [Parameter]
-    public GameCardListType GameCardListType { get; set; }
-
-    [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-    public List<GameCardModel> CardsInList { get; set; }
+    [Parameter]
+    public GameCardListModel GameCardListModel { get; set; }
 
     string dropClass = "";
-
-    protected override void OnParametersSet()
-    {
-        CardsInList = GameManager.GetCards(GameCardListType);
-    }
 
     private void HandleDragEnter()
     {
@@ -56,7 +49,7 @@
     {
         dropClass = "";
 
-        await Container.UpdateCardAsync(GameCardListType);
+        await Container.UpdateCardAsync(GameCardListModel);
     }
 
 }
