@@ -6,8 +6,8 @@
     list-style: none;
 }
 
-.no-drop {
-    border: 2px dashed red;
+.cannot-drop {
+    background-color: red;
 }
 
 .can-drop {
@@ -38,4 +38,9 @@
 
 .featurecard {
     background-color: #ccd9ff;
+}
+
+/**Common*/
+.hide {
+    opacity: 0;
 }

@@ -42,18 +42,24 @@ namespace TechDebtGame.Pages
 
         private void UpdateCurrentIteration()
         {
-            CurrentIteration.AvailableCapacity =
-                CurrentIteration.TechDebtImpactOnCapacity
-                + CurrentIteration.TotalCapacity
-                - ProposedForIterationCardList.Cost;
-
+            CurrentIteration.AvailableCapacity = CalculateAvailableCapacity();
             CurrentIteration.FeaturePointsComplete = ProposedForIterationCardList.FeaturePoints;
+        }
+
+        private int CalculateAvailableCapacity()
+        {
+            return CurrentIteration.TechDebtImpactOnCapacity
+                   + CurrentIteration.TotalCapacity
+                   - ProposedForIterationCardList.Cost;
         }
 
 
         public bool MoveCard(IGameCardModel cardModel, GameCardListModel listToMoveTo)
         {
             if (!listToMoveTo.WillAccept(cardModel))
+                return false;
+
+            if (!HasCapacityForWork(cardModel, listToMoveTo))
                 return false;
 
             ProposedForIterationCardList.Remove(cardModel);
@@ -65,6 +71,11 @@ namespace TechDebtGame.Pages
             UpdateCurrentIteration();
 
             return true;
+        }
+
+        public bool HasCapacityForWork(IGameCardModel cardModel, GameCardListModel list)
+        {
+            return list != ProposedForIterationCardList || CalculateAvailableCapacity() - cardModel.Cost >= 0;
         }
     }
 }
