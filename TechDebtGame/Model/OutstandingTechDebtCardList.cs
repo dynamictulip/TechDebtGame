@@ -1,4 +1,6 @@
-﻿namespace TechDebtGame.Model
+﻿using System.Linq;
+
+namespace TechDebtGame.Model
 {
     internal class OutstandingTechDebtCardList : GameCardListModel
     {
@@ -15,5 +17,8 @@
                 }
             );
         }
+
+        public int TechDebtImpact => Cards.OfType<TechDebtGameCardModel>()
+            .Sum(d => d.Impact);
     }
 }

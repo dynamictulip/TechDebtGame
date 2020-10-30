@@ -30,8 +30,7 @@ namespace TechDebtGame.Pages
             if (Iterations.Any())
                 _outstandingTechDebtCardList.Add(CurrentIteration.GameCardModel);
 
-            var currentTechDebt = _outstandingTechDebtCardList.Cards.OfType<TechDebtGameCardModel>()
-                .Sum(d => d.Impact);
+            var currentTechDebt = _outstandingTechDebtCardList.TechDebtImpact;
 
             Iterations.Add(new IterationModel
             {
@@ -45,14 +44,12 @@ namespace TechDebtGame.Pages
 
         public void UpdateCurrentIteration()
         {
-            var costOfCurrentSprint = _proposedForIterationCardList.Cost;
-            var featurePoints = _proposedForIterationCardList
-                .Cards.Where(c => c.GetType() == typeof(GameCardModel))
-                .Sum(f => f.Cost);
+            CurrentIteration.AvailableCapacity = 
+                CurrentIteration.TechDebtImpactOnCapacity 
+                + CurrentIteration.TotalCapacity 
+                - _proposedForIterationCardList.Cost;
 
-            CurrentIteration.AvailableCapacity = CurrentIteration.TechDebtImpactOnCapacity +
-                CurrentIteration.TotalCapacity - costOfCurrentSprint;
-            CurrentIteration.FeaturePointsComplete = featurePoints;
+            CurrentIteration.FeaturePointsComplete = _proposedForIterationCardList.FeaturePoints;
         }
         
 
