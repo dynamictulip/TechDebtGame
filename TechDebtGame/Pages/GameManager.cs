@@ -7,10 +7,6 @@ namespace TechDebtGame.Pages
     public class GameManager
     {
         private const int TeamTotalCapacity = 60;
-
-        public readonly OutstandingFeaturesCardList OutstandingFeaturesCardList = new OutstandingFeaturesCardList();
-        public readonly OutstandingTechDebtCardList OutstandingTechDebtCardList = new OutstandingTechDebtCardList();
-        public readonly ProposedForIterationCardList ProposedForIterationCardList = new ProposedForIterationCardList();
         private readonly IterationCardDeck _iterationCardDeck = new IterationCardDeck();
 
         public GameManager()
@@ -18,6 +14,9 @@ namespace TechDebtGame.Pages
             StartNewIteration();
         }
 
+        public OutstandingFeaturesCardList OutstandingFeaturesCardList { get; } = new OutstandingFeaturesCardList();
+        public OutstandingTechDebtCardList OutstandingTechDebtCardList { get; } = new OutstandingTechDebtCardList();
+        public ProposedForIterationCardList ProposedForIterationCardList { get; } = new ProposedForIterationCardList();
         public List<IterationModel> Iterations { get; } = new List<IterationModel>();
         public IterationModel CurrentIteration => Iterations.Last();
         public IterationModel LastIteration => Iterations.Count > 1 ? Iterations[^2] : IterationModel.Empty;
@@ -41,7 +40,7 @@ namespace TechDebtGame.Pages
             });
         }
 
-        public void UpdateCurrentIteration()
+        private void UpdateCurrentIteration()
         {
             CurrentIteration.AvailableCapacity =
                 CurrentIteration.TechDebtImpactOnCapacity
