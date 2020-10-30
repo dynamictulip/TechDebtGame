@@ -53,8 +53,11 @@ namespace TechDebtGame.Pages
         }
         
 
-        public void MoveCard(IGameCardModel cardModel, GameCardListType moveToList)
+        public bool MoveCard(IGameCardModel cardModel, GameCardListType moveToList)
         {
+            if (!GetCardList(moveToList).WillAccept(cardModel))
+                return false;
+
             _proposedForIterationCardList.Remove(cardModel);
             _outstandingFeaturesCardList.Remove(cardModel);
             _outstandingTechDebtCardList.Remove(cardModel);
@@ -62,6 +65,8 @@ namespace TechDebtGame.Pages
             GetCardList(moveToList).Add(cardModel);
 
             UpdateCurrentIteration();
+
+            return true;
         }
 
         private GameCardListModel GetCardList(GameCardListType moveToList)

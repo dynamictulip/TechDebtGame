@@ -18,5 +18,10 @@
                 }
             );
         }
+
+        public override bool WillAccept(IGameCardModel cardModel)
+        {
+            return cardModel.GetType() == typeof(GameCardModel);
+        }
     }
 }

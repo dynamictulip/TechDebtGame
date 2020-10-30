@@ -20,5 +20,10 @@ namespace TechDebtGame.Model
 
         public int TechDebtImpact => Cards.OfType<TechDebtGameCardModel>()
             .Sum(d => d.Impact);
+
+        public override bool WillAccept(IGameCardModel cardModel)
+        {
+            return cardModel.GetType() == typeof(TechDebtGameCardModel);
+        }
     }
 }

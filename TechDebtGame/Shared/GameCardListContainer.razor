@@ -24,9 +24,8 @@
     {
         var cardModel = Payload;
 
-        GameManager.MoveCard(cardModel, gameCardListType);
-
-        await OnStatusUpdated.InvokeAsync(Payload);
+        if (GameManager.MoveCard(cardModel, gameCardListType))
+            await OnStatusUpdated.InvokeAsync(Payload);
     }
 
 }

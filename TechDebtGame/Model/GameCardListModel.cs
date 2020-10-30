@@ -23,5 +23,7 @@ namespace TechDebtGame.Model
         {
             Cards.Remove(card);
         }
+
+        public abstract bool WillAccept(IGameCardModel cardModel);
     }
 }
