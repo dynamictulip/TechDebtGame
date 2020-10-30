@@ -9,38 +9,22 @@ namespace TechDebtGame.Pages
     {
         private const int TeamTotalCapacity = 60;
 
-        private readonly Dictionary<GameCardListType, GameCardListModel> _cardLists =
-            new Dictionary<GameCardListType, GameCardListModel>();
+        private readonly List <GameCardListModel> _cardLists = new List<GameCardListModel>();
+        private OutstandingFeaturesCardList _outstandingFeaturesCardList = new OutstandingFeaturesCardList();
+        private OutstandingTechDebtCardList _outstandingTechDebtCardList = new OutstandingTechDebtCardList();
+        private ProposedForIterationCardList _proposedForIterationCardList = new ProposedForIterationCardList();
 
         public GameManager()
         {
-            foreach (GameCardListType type in Enum.GetValues(typeof(GameCardListType)))
-                _cardLists.Add(type, new GameCardListModel());
+            _cardLists.Add(_outstandingFeaturesCardList);
+            _cardLists.Add(_outstandingTechDebtCardList);
+            _cardLists.Add(_proposedForIterationCardList);
 
-            InitialiseTechDebt();
             InitialiseIterationCards();
-            InitialiseFeatures();
 
             StartNewIteration();
         }
-
-        private void InitialiseFeatures()
-        {
-            _cardLists[GameCardListType.OutstandingFeatures] = new GameCardListModel(new IGameCardModel[]
-                {
-                    new GameCardModel {Cost = 5},
-                    new GameCardModel {Cost = 5},
-                    new GameCardModel {Cost = 5},
-                    new GameCardModel {Cost = 10},
-                    new GameCardModel {Cost = 10},
-                    new GameCardModel {Cost = 10},
-                    new GameCardModel {Cost = 15},
-                    new GameCardModel {Cost = 15},
-                    new GameCardModel {Cost = 15}
-                }
-            );
-        }
-
+        
         public List<IterationModel> Iterations { get; } = new List<IterationModel>();
         public IterationModel CurrentIteration => Iterations.Last();
         public IterationModel LastIteration => Iterations.Count > 1 ? Iterations[^2] : IterationModel.Empty;
@@ -48,12 +32,12 @@ namespace TechDebtGame.Pages
 
         public void StartNewIteration()
         {
-            _cardLists[GameCardListType.ProposedForIteration].Clear();
+            _proposedForIterationCardList.Clear();
 
             if (Iterations.Any())
-                _cardLists[GameCardListType.OutstandingTechDebt].Add(CurrentIteration.GameCardModel);
+                _outstandingTechDebtCardList.Add(CurrentIteration.GameCardModel);
 
-            var currentTechDebt = _cardLists[GameCardListType.OutstandingTechDebt].Cards.OfType<TechDebtGameCardModel>()
+            var currentTechDebt = _outstandingTechDebtCardList.Cards.OfType<TechDebtGameCardModel>()
                 .Sum(d => d.Impact);
             var availableCapacity = TeamTotalCapacity + currentTechDebt;
             var randomScenario = IterationCards.Pop();
@@ -70,8 +54,8 @@ namespace TechDebtGame.Pages
 
         public void UpdateCurrentIteration()
         {
-            var costOfCurrentSprint = _cardLists[GameCardListType.ProposedForIteration].Cost;
-            var featurePoints = _cardLists[GameCardListType.ProposedForIteration]
+            var costOfCurrentSprint = _proposedForIterationCardList.Cost;
+            var featurePoints = _proposedForIterationCardList
                 .Cards.Where(c => c.GetType() == typeof(GameCardModel))
                 .Sum(f => f.Cost);
 
@@ -79,21 +63,7 @@ namespace TechDebtGame.Pages
                 CurrentIteration.TotalCapacity - costOfCurrentSprint;
             CurrentIteration.FeaturePointsComplete = featurePoints;
         }
-
-        public void InitialiseTechDebt()
-        {
-            _cardLists[GameCardListType.OutstandingTechDebt] = new GameCardListModel(new[]
-                {
-                    new TechDebtGameCardModel {Cost = 5, Impact = -5, Scenario = "Refactor core code"},
-                    new TechDebtGameCardModel
-                        {Cost = 5, Impact = -5, Scenario = "Setup continuous integration environment"},
-                    new TechDebtGameCardModel {Cost = 10, Impact = -5, Scenario = "Automate deployment"},
-                    new TechDebtGameCardModel {Cost = 15, Impact = -10, Scenario = "Automate Unit Tests"},
-                    new TechDebtGameCardModel {Cost = 15, Impact = -10, Scenario = "Automate Acceptance Tests"}
-                }
-            );
-        }
-
+        
         public void InitialiseIterationCards()
         {
             IterationCards = new Stack<TechDebtGameCardModel>(new[]
@@ -165,16 +135,34 @@ namespace TechDebtGame.Pages
 
         public void MoveCard(IGameCardModel cardModel, GameCardListType moveToList)
         {
-            foreach (var list in _cardLists.Values) list.Remove(cardModel);
+            foreach (var list in _cardLists) list.Remove(cardModel);
 
-            _cardLists[moveToList].Add(cardModel);
+            GetCardList(moveToList).Add(cardModel);
 
             UpdateCurrentIteration();
         }
 
+        private GameCardListModel GetCardList(GameCardListType moveToList)
+        {
+            switch (moveToList)
+            {
+                case GameCardListType.ProposedForIteration:
+                    return _proposedForIterationCardList;
+
+                case GameCardListType.OutstandingTechDebt:
+                    return _outstandingTechDebtCardList;
+
+                case GameCardListType.OutstandingFeatures:
+                    return _outstandingFeaturesCardList;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(moveToList), moveToList, null);
+            }
+        }
+
         public List<IGameCardModel> GetCards(GameCardListType gameCardListType)
         {
-            return _cardLists[gameCardListType].Cards;
+            return GetCardList(gameCardListType).Cards;
         }
     }
 }
