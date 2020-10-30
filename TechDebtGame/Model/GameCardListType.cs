@@ -1,4 +1,4 @@
-﻿namespace TechDebtGame.Shared
+﻿namespace TechDebtGame.Model
 {
     public enum GameCardListType
     {
