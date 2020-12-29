@@ -59,4 +59,9 @@ stages:
         azureSubscription: 'Visual Studio Enterprise(ec3f29ba-2f6c-490c-a0ba-1c962302296f)'
         Destination: 'AzureBlob'
         storage: 'techdebtgame'
-        ContainerName: '$web'
+        ContainerName: $web
+        CleanTargetBeforeCopy: true
+        CopyFilesInParallel: true
+        
+
+    
