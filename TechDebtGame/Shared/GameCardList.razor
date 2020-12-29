@@ -36,9 +36,9 @@
     string dropClass = "";
     string cardOverride = "";
 
-    public void HandleDragEnter()
+    public void HandleDragEnter(DragEventArgs dragEventArgs)
     {
-        if (GameManager.HasCapacityForWork(Container.Payload, GameCardListModel))
+        if (GameManager.CanMoveCard(Container.Payload, GameCardListModel))
             dropClass = "can-drop";
         else
         {

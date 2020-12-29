@@ -56,11 +56,7 @@ namespace TechDebtGame.Pages
 
         public bool MoveCard(IGameCardModel cardModel, GameCardListModel listToMoveTo)
         {
-            if (!listToMoveTo.WillAccept(cardModel))
-                return false;
-
-            if (!HasCapacityForWork(cardModel, listToMoveTo))
-                return false;
+            if (!CanMoveCard(cardModel, listToMoveTo)) return false;
 
             ProposedForIterationCardList.Remove(cardModel);
             OutstandingFeaturesCardList.Remove(cardModel);
@@ -69,6 +65,17 @@ namespace TechDebtGame.Pages
             listToMoveTo.Add(cardModel);
 
             UpdateCurrentIteration();
+
+            return true;
+        }
+
+        public bool CanMoveCard(IGameCardModel cardModel, GameCardListModel listToMoveTo)
+        {
+            if (!listToMoveTo.WillAccept(cardModel))
+                return false;
+
+            if (!HasCapacityForWork(cardModel, listToMoveTo))
+                return false;
 
             return true;
         }
