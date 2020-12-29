@@ -25,7 +25,7 @@ namespace TechDebtGame.Pages
         {
             ProposedForIterationCardList.Clear();
 
-            if (Iterations.Any())
+            if (Iterations.Any() && CurrentIteration.GameCardModel.Cost > 0)
                 OutstandingTechDebtCardList.Add(CurrentIteration.GameCardModel);
 
             var currentTechDebt = OutstandingTechDebtCardList.TechDebtImpact;
