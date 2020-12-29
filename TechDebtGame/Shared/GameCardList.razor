@@ -11,7 +11,7 @@
 
         @foreach (var card in GameCardListModel.Cards)
         {
-            <li>
+            <li class="@cardOverride">
                 <GameCard GameCardModel=card />
             </li>
         }
@@ -34,15 +34,23 @@
     public GameCardListModel GameCardListModel { get; set; }
 
     string dropClass = "";
+    string cardOverride = "";
 
-    private void HandleDragEnter()
+    public void HandleDragEnter(DragEventArgs dragEventArgs)
     {
-        dropClass = "can-drop";
+        if (GameManager.CanMoveCard(Container.Payload, GameCardListModel))
+            dropClass = "can-drop";
+        else
+        {
+            dropClass = "cannot-drop";
+            cardOverride = "hide";
+        }
     }
 
-    private void HandleDragLeave()
+    public void HandleDragLeave()
     {
         dropClass = "";
+        cardOverride = "";
     }
 
     private async Task HandleDrop()
@@ -51,5 +59,4 @@
 
         await Container.UpdateCardAsync(GameCardListModel);
     }
-
 }
