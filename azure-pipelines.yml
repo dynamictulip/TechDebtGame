@@ -55,7 +55,7 @@ stages:
     - task: GitHubPagesPublish@1
       inputs:
         docPath: '$(Pipeline.Workspace)'
-        githubusername: 'AutomatedRelease'
+        githubusername: 'dynamicTulip'
         githubaccesstoken: '$(githubPat)'
         repositoryname: 'dynamictulip/TechDebtGame'
         branchname: 'gh-pages'
