@@ -45,18 +45,18 @@ stages:
   
   jobs:
   - job: Deploy
+
     steps:
     - task: DownloadPipelineArtifact@2
       inputs:
         buildType: 'current'
         artifactName: 'drop'
         targetPath: '$(Pipeline.Workspace)'
-        
-    - task: GitHubPagesPublish@1
+
+    - task: AzureFileCopy@4
       inputs:
-        docPath: '$(Pipeline.Workspace)'
-        githubusername: 'dynamicTulip'
-        githubaccesstoken: '$(githubPat)'
-        repositoryname: 'TechDebtGame'
-        branchname: 'gh-pages'
-        commitmessage: 'Automated Release $(Release.ReleaseId)'
+        SourcePath: '$(Pipeline.Workspace)'
+        azureSubscription: 'Visual Studio Enterprise(ec3f29ba-2f6c-490c-a0ba-1c962302296f)'
+        Destination: 'AzureBlob'
+        storage: 'techdebtgame'
+        ContainerName: '$web'
