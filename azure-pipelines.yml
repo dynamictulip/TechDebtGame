@@ -57,6 +57,6 @@ stages:
         docPath: '$(Pipeline.Workspace)'
         githubusername: 'dynamicTulip'
         githubaccesstoken: '$(githubPat)'
-        repositoryname: 'dynamictulip/TechDebtGame'
+        repositoryname: 'TechDebtGame'
         branchname: 'gh-pages'
         commitmessage: 'Automated Release $(Release.ReleaseId)'
