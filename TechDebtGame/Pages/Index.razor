@@ -1,24 +1,12 @@
 ﻿@page "/"
 
 <Container>
-    <Heading Size="HeadingSize.Is1">The Technical Debt Game</Heading>
-
-    <Heading Size="HeadingSize.Is3">Gameplay Instructions</Heading>
-    <Paragraph>
-        Drag and drop work items from the Tech Debt Register and the Outstanding Feature columns into the Proposed Work column.
-    </Paragraph>
-    <Paragraph>Every work item has a cost to complete, this is paid for in the Available Capacity</Paragraph>
-    <Paragraph>
-        Outstanding Technical Debt items drain the team's capacity
-    </Paragraph>
-    <Paragraph>Repeat these steps for 5 Iterations, with the goal to maximize the Feature Story Points completed.</Paragraph>
-
     <Modal @ref="_endOfIterationModal">
-        <ModalBackdrop/>
+        <ModalBackdrop />
         <ModalContent Centered="true">
             <ModalHeader>
                 <ModalTitle> End of IterationModel @_gameManager.LastIteration.Number</ModalTitle>
-                <CloseButton Clicked="@HideModal"/>
+                <CloseButton Clicked="@HideEndIterationModal" />
             </ModalHeader>
             <ModalBody>
                 <Container Fluid="true">
@@ -49,7 +37,7 @@
                 </Container>
             </ModalBody>
             <ModalFooter>
-                <Button Color="Color.Primary" Clicked="@HideModal">Close</Button>
+                <Button Color="Color.Primary" Clicked="@HideEndIterationModal">Close</Button>
             </ModalFooter>
         </ModalContent>
     </Modal>
@@ -160,16 +148,18 @@
 </Container>
 
 @code {
+#pragma warning disable 649 //This field is assigned to by Blazor
     private Modal _endOfIterationModal;
+#pragma warning restore 649
 
     private readonly GameManager _gameManager = new GameManager();
 
-    private void ShowModal()
+    private void ShowEndIterationModal()
     {
         _endOfIterationModal.Show();
     }
 
-    private void HideModal()
+    private void HideEndIterationModal()
     {
         _endOfIterationModal.Hide();
     }
@@ -177,12 +167,12 @@
     public void EndIteration()
     {
         _gameManager.StartNewIteration();
-        ShowModal();
+        ShowEndIterationModal();
     }
 
     private void CardsMoved()
     {
-    //This forces a repaint
+        //This forces a repaint
     }
 
 }
