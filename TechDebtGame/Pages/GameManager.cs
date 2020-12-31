@@ -20,6 +20,7 @@ namespace TechDebtGame.Pages
         public List<IterationModel> Iterations { get; } = new List<IterationModel>();
         public IterationModel CurrentIteration => Iterations.Last();
         public IterationModel LastIteration => Iterations.Count > 1 ? Iterations[^2] : IterationModel.Empty;
+        public int MaxIterations => 5;
 
         public void StartNewIteration()
         {

@@ -1,0 +1,115 @@
+﻿@using TechDebtGame.Pages
+<svg xmlns="http://www.w3.org/2000/svg" height="@GraphHeight" width="@GraphWidth">
+    @* Axes *@
+    <g style="stroke-linecap: round;">
+
+        <line x1="@XAxisOffset" y1="@YAxisHeight" x2="@XAxisWidth" y2="@YAxisHeight" stroke="darkgrey" />
+        <text x="@XAxisWidth" y="@(YAxisHeight + 5)">Iteration</text>
+
+        <line x1="@XAxisOffset" y1="30" x2="@XAxisOffset" y2="@YAxisHeight" stroke="darkgrey" />
+        <text x="@(XAxisOffset - 25)" y="20">Points</text>
+
+        @for (var i = 0; i <= TotalFeaturePoints; i += 20)
+        {
+            <g>
+                <line x1="@(XAxisOffset - 5)"
+                      y1="@CalculatePointY(i)"
+                      x2="@XAxisOffset"
+                      y2="@CalculatePointY(i)"
+                      stroke="darkgrey" />
+                <text x="@(XAxisOffset - i.ToString().Length * 10 - 5)" y="@(CalculatePointY(i) + 5)">@i</text>
+            </g>
+        }
+
+        @for (var i = 1; i <= GameManager.MaxIterations; i++)
+        {
+            <g>
+                <line x1="@CalculatePointX(i)"
+                      y1="@YAxisHeight"
+                      x2="@CalculatePointX(i)"
+                      y2="@(YAxisHeight + 5)"
+                      stroke="darkgrey" />
+
+                <text x="@(CalculatePointX(i) - 5)" y="@(YAxisHeight + 20)">@i</text>
+            </g>
+        }
+    </g>
+
+    @* Tech debt capacity line *@
+    <g stroke="red">
+        <path d="@TechDebtPath" stroke-width="3" fill="none" stroke-dasharray="5,5"/>
+        @foreach (var iteration in GameManager.Iterations)
+        {
+            <circle cx="@CalculatePointX(iteration)" cy="@CalculateTechDebtImpactPointY(iteration)" r="5" stroke-width="3"/>
+        }
+    </g>
+    <text x="@(CalculatePointX(GameManager.CurrentIteration) + 10)" y="@(CalculateTechDebtImpactPointY(GameManager.CurrentIteration) + 5)">Tech debt impact</text>
+
+    @* Feature points complete line *@
+    <g stroke="blue">
+        <polyline points="@FeaturePointsCompletePoints" stroke-width="3" fill="none" stroke-dasharray="5,5"/>
+        @foreach (var iteration in GameManager.Iterations)
+        {
+            <circle cx="@CalculatePointX(iteration)" cy="@CalculateFeaturePointsCompletePointY(iteration)" r="5" stroke-width="3"/>
+        }
+    </g>
+    <text x="@(CalculatePointX(GameManager.CurrentIteration) + 10)" y="@(CalculateFeaturePointsCompletePointY(GameManager.CurrentIteration) + 5)">Feature points complete</text>
+
+</svg>
+
+@code {
+
+    [Parameter]
+    public GameManager GameManager { get; set; }
+
+    private int GraphHeight => YAxisHeight + 50;
+    private int GraphWidth => XAxisWidth + XAxisOffset * 2;
+
+    private int XAxisOffset => 50;
+
+    private int YAxisHeight => 400;
+    private int XAxisWidth => 800;
+
+    private string TechDebtPath => $"M{XAxisOffset} {CalculateTechDebtImpactPointY(GameManager.Iterations.First())} " + string.Join(' ', GameManager.Iterations.Skip(1).Select(i => $"L{CalculatePointX(i)} {CalculateTechDebtImpactPointY(i)}"));
+
+    private string FeaturePointsCompletePoints => string.Join(' ',
+        GameManager.Iterations.Select(i => $"{CalculatePointX(i)},{CalculateFeaturePointsCompletePointY(i)}"));
+
+    private int CalculatePointX(IterationModel i)
+    {
+        return CalculatePointX(i.Number );
+    }
+
+    private int CalculatePointX(int i)
+    {
+        return XAxisOffset + (i - 1) * XAxisWidth / GameManager.MaxIterations;
+    }
+
+    private int CalculateTechDebtImpactPointY(IterationModel i)
+    {
+        return CalculatePointY(0 - i.TechDebtImpactOnCapacity);
+    }
+
+    private int CalculateFeaturePointsCompletePointY(IterationModel i)
+    {
+        var cumulation = 0;
+        foreach (var iteration in GameManager.Iterations)
+        {
+            cumulation += iteration.FeaturePointsComplete;
+            if (iteration == i)
+            {
+                break;
+            }
+        }
+        return CalculatePointY(cumulation);
+    }
+
+    private int CalculatePointY(int capacity)
+    {
+        return YAxisHeight - capacity * (YAxisHeight / TotalFeaturePoints);
+    }
+
+    private int TotalFeaturePoints => GameManager.OutstandingFeaturesCardList.Cost + GameManager.Iterations.Sum(i => i.FeaturePointsComplete);
+
+
+}
