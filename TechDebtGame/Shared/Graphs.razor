@@ -1,0 +1,49 @@
+﻿@using TechDebtGame.Pages
+<h3>Graphs</h3>
+
+<svg xmlns="http://www.w3.org/2000/svg" height="@GraphHeight" width="@GraphWidth">
+    @* Axes *@
+    <g style="stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-width: 1;">
+        <line x1="@XAxisOffset" y1="0" x2="@XAxisOffset" y2="@YAxisHeight"/>
+        <line x1="@XAxisOffset" y1="@YAxisHeight" x2="@XAxisWidth" y2="@YAxisHeight"/>
+    </g>
+
+    @* Tech debt capacity line *@
+    <g stroke="red" stroke-dasharray="5,5">
+        <path d="@TechDebtPath" stroke-width="3" fill="none"/>
+        @foreach (var iteration in GameManager.Iterations)
+        {
+            <circle cx="@CalculatePointX(iteration)" cy="@CalculatePointY(iteration)" r="5" stroke-width="3"/>
+        }
+    </g>
+    <text x="@(CalculatePointX(GameManager.CurrentIteration) + 10)" y="@(CalculatePointY(GameManager.CurrentIteration) + 5)">Tech debt impact</text>
+
+</svg>
+
+@code {
+
+    [Parameter]
+    public GameManager GameManager { get; set; }
+
+    private int GraphHeight => YAxisHeight + 50;
+    private int GraphWidth => XAxisWidth + XAxisOffset;
+
+    private int XAxisOffset => 50;
+
+    private int YAxisHeight => 400;
+    private int XAxisWidth => 800;
+
+    private string TechDebtPath => $"M{XAxisOffset} {CalculatePointY(GameManager.Iterations.First())} " + string.Join(' ', GameManager.Iterations.Skip(1).Select(i => $"L{CalculatePointX(i)} {CalculatePointY(i)}"));
+
+    private int CalculatePointX(IterationModel i)
+    {
+        return XAxisOffset + (i.Number - 1) * XAxisWidth / GameManager.MaxIterations;
+    }
+
+    private int CalculatePointY(IterationModel i)
+    {
+        return YAxisHeight - i.TechDebtImpactOnCapacity * (0 - YAxisHeight / i.TotalCapacity * 3 / 4);
+    }
+
+
+}

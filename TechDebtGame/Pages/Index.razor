@@ -41,8 +41,14 @@
             </ModalFooter>
         </ModalContent>
     </Modal>
+    
+    <Row Gutter="(32, 16)">
+        <Column>
+            <Graphs GameManager="@_gameManager"></Graphs>
+        </Column>
+    </Row>
 
-    <Row>
+    <Row Gutter="(32, 16)">
         <Column ColumnSize="ColumnSize.Is2">
             <div id="iterationCards">
                 <Button Color="Color.Primary" Clicked="@EndIteration" Block="true">
@@ -120,8 +126,8 @@
             </Table>
         </Column>
     </Row>
-    <Divider />
-    <Row>
+    <Divider/>
+    <Row Gutter="(32, 16)">
         <Column ColumnSize="ColumnSize.Is12">
 
             <GameCardListContainer GameManager="@_gameManager" OnStatusUpdated="CardsMoved">
