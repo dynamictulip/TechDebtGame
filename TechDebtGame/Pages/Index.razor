@@ -2,11 +2,11 @@
 
 <Container>
     <Modal @ref="_endOfIterationModal">
-        <ModalBackdrop />
+        <ModalBackdrop/>
         <ModalContent Centered="true">
             <ModalHeader>
                 <ModalTitle> End of Iteration @_gameManager.LastIteration.Number</ModalTitle>
-                <CloseButton Clicked="@HideEndIterationModal" />
+                <CloseButton Clicked="@HideEndIterationModal"/>
             </ModalHeader>
             <ModalBody>
                 <Container Fluid="true">
@@ -41,7 +41,7 @@
             </ModalFooter>
         </ModalContent>
     </Modal>
-    
+
     <Row Gutter="(32, 16)">
         <Column>
             <Graphs GameManager="@_gameManager"></Graphs>
@@ -51,82 +51,38 @@
     <Row Gutter="(32, 16)">
         <Column ColumnSize="ColumnSize.Is2">
             <div id="iterationCards">
-                <Button Color="Color.Primary" Clicked="@EndIteration" Block="true">
-                    Next Iteration
-                </Button>
+                @if (_gameManager.CurrentIteration.Number < _gameManager.MaxIterations)
+                {
+                    <Button Color="Color.Primary" Clicked="@EndIteration" Block="true">
+                        Next Iteration
+                    </Button>
+                }
+                else if (!_gameManager.GameHasEnded)
+                {
+                    <Button Color="Color.Danger" Clicked="@EndIteration" Block="true">
+                        End Game
+                    </Button>
+                }
             </div>
 
         </Column>
-        <Column ColumnSize="ColumnSize.Is10">
-            <Table Narrow="true" Hoverable="true">
-                <TableHeader>
-                    <TableRow>
-                        <TableHeaderCell>
-                            <Text Alignment="TextAlignment.Center">Iteration number</Text>
-                        </TableHeaderCell>
-                        <TableHeaderCell>
-                            <Text Alignment="TextAlignment.Center">Team total capacity</Text>
-                        </TableHeaderCell>
-                        <TableHeaderCell>
-                            <Text Alignment="TextAlignment.Center">Tech debt impact on capacity</Text>
-                        </TableHeaderCell>
-                        <TableHeaderCell>
-                            <Text Alignment="TextAlignment.Center">Available capacity</Text>
-                        </TableHeaderCell>
-                        <TableHeaderCell>
-                            <Text Alignment="TextAlignment.Center">Feature points complete</Text>
-                        </TableHeaderCell>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    @foreach (var iteration in _gameManager.Iterations)
-                    {
-                        @if (iteration == _gameManager.CurrentIteration)
-                        {
-                            <TableRow Background=Background.Danger TextColor=TextColor.White>
-                                <TableRowHeader>
-                                    <Text Alignment="TextAlignment.Center">Proposed @iteration.Number</Text>
-                                </TableRowHeader>
-                                <TableRowCell>
-                                    <Text Alignment="TextAlignment.Center">@iteration.TotalCapacity</Text>
-                                </TableRowCell>
-                                <TableRowCell>
-                                    <Text Alignment="TextAlignment.Center">@iteration.TechDebtImpactOnCapacity</Text>
-                                </TableRowCell>
-                                <TableRowCell>
-                                    <Text Alignment="TextAlignment.Center">@iteration.AvailableCapacity</Text>
-                                </TableRowCell>
-                                <TableRowCell>
-                                    <Text Alignment="TextAlignment.Center">@iteration.FeaturePointsComplete</Text>
-                                </TableRowCell>
-                            </TableRow>
-                        }
-                        else
-                        {
-                            <TableRow>
-                                <TableRowHeader>
-                                    <Text Alignment="TextAlignment.Center">@iteration.Number</Text>
-                                </TableRowHeader>
-                                <TableRowCell>
-                                    <Text Alignment="TextAlignment.Center">@iteration.TotalCapacity</Text>
-                                </TableRowCell>
-                                <TableRowCell>
-                                    <Text Alignment="TextAlignment.Center">@iteration.TechDebtImpactOnCapacity</Text>
-                                </TableRowCell>
-                                <TableRowCell>
-                                    <Text Alignment="TextAlignment.Center">@iteration.AvailableCapacity</Text>
-                                </TableRowCell>
-                                <TableRowCell>
-                                    <Text Alignment="TextAlignment.Center">@iteration.FeaturePointsComplete</Text>
-                                </TableRowCell>
-                            </TableRow>
-                        }
-                    }
-                </TableBody>
-            </Table>
-        </Column>
+
+        @if (_gameManager.GameHasEnded)
+        {
+            <Column ColumnSize="ColumnSize.Is12">
+                <IterationsTable GameManager="@_gameManager"/>
+            </Column>
+        }
+        else
+        {
+            <Column ColumnSize="ColumnSize.Is10">
+                <IterationsTable GameManager="@_gameManager"/>
+            </Column>
+        }
     </Row>
+
     <Divider/>
+
     <Row Gutter="(32, 16)">
         <Column ColumnSize="ColumnSize.Is12">
 
@@ -137,11 +93,14 @@
                             <Heading Size="HeadingSize.Is5" TextColor="TextColor.Danger">Tech Debt Register</Heading>
                         </GameCardList>
                     </Column>
-                    <Column ColumnSize="ColumnSize.Is4">
-                        <GameCardList GameCardListModel="@_gameManager.ProposedForIterationCardList">
-                            <Heading Size="HeadingSize.Is4" TextColor="TextColor.Primary">Proposed work for Iteration @_gameManager.CurrentIteration.Number</Heading>
-                        </GameCardList>
-                    </Column>
+                    @if (!_gameManager.GameHasEnded)
+                    {
+                        <Column ColumnSize="ColumnSize.Is4">
+                            <GameCardList GameCardListModel="@_gameManager.ProposedForIterationCardList">
+                                <Heading Size="HeadingSize.Is4" TextColor="TextColor.Primary">Proposed work for Iteration @_gameManager.CurrentIteration.Number</Heading>
+                            </GameCardList>
+                        </Column>
+                    }
                     <Column ColumnSize="ColumnSize.Is4">
                         <GameCardList GameCardListModel="@_gameManager.OutstandingFeaturesCardList">
                             <Heading Size="HeadingSize.Is5" TextColor="TextColor.Secondary">Outstanding Features</Heading>
@@ -170,15 +129,18 @@
         _endOfIterationModal.Hide();
     }
 
-    public void EndIteration()
+    private void EndIteration()
     {
-        _gameManager.StartNewIteration();
-        ShowEndIterationModal();
+        if (!_gameManager.GameHasEnded)
+        {
+            _gameManager.StartNewIteration();
+            ShowEndIterationModal();
+        }
     }
 
     private void CardsMoved()
     {
-        //This forces a repaint
+    //This forces a repaint
     }
 
 }

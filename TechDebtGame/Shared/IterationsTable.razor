@@ -1,0 +1,74 @@
+﻿@using TechDebtGame.Pages
+<Table Narrow="true" Hoverable="true">
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>
+                <Text Alignment="TextAlignment.Center">Iteration number</Text>
+            </TableHeaderCell>
+            <TableHeaderCell>
+                <Text Alignment="TextAlignment.Center">Team total capacity</Text>
+            </TableHeaderCell>
+            <TableHeaderCell>
+                <Text Alignment="TextAlignment.Center">Tech debt impact</Text>
+            </TableHeaderCell>
+            <TableHeaderCell>
+                <Text Alignment="TextAlignment.Center">Available capacity</Text>
+            </TableHeaderCell>
+            <TableHeaderCell>
+                <Text Alignment="TextAlignment.Center">Feature points</Text>
+            </TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @foreach (var iteration in GameManager.Iterations)
+        {
+            @if (iteration == GameManager.CurrentIteration && !GameManager.GameHasEnded)
+            {
+                <TableRow Background=Background.Secondary TextColor=TextColor.White>
+                    <TableRowHeader>
+                        <Text Alignment="TextAlignment.Center">Proposed @iteration.Number</Text>
+                    </TableRowHeader>
+                    <TableRowCell>
+                        <Text Alignment="TextAlignment.Center">@iteration.TotalCapacity</Text>
+                    </TableRowCell>
+                    <TableRowCell>
+                        <Text Alignment="TextAlignment.Center">@iteration.TechDebtImpactOnCapacity</Text>
+                    </TableRowCell>
+                    <TableRowCell>
+                        <Text Alignment="TextAlignment.Center">@iteration.AvailableCapacity</Text>
+                    </TableRowCell>
+                    <TableRowCell>
+                        <Text Alignment="TextAlignment.Center">@iteration.FeaturePointsComplete</Text>
+                    </TableRowCell>
+                </TableRow>
+            }
+            else
+            {
+                <TableRow>
+                    <TableRowHeader>
+                        <Text Alignment="TextAlignment.Center">@iteration.Number</Text>
+                    </TableRowHeader>
+                    <TableRowCell>
+                        <Text Alignment="TextAlignment.Center">@iteration.TotalCapacity</Text>
+                    </TableRowCell>
+                    <TableRowCell>
+                        <Text Alignment="TextAlignment.Center">@iteration.TechDebtImpactOnCapacity</Text>
+                    </TableRowCell>
+                    <TableRowCell>
+                        <Text Alignment="TextAlignment.Center">@iteration.AvailableCapacity</Text>
+                    </TableRowCell>
+                    <TableRowCell>
+                        <Text Alignment="TextAlignment.Center">@iteration.FeaturePointsComplete</Text>
+                    </TableRowCell>
+                </TableRow>
+            }
+        }
+    </TableBody>
+</Table>
+
+@code {
+
+    [Parameter]
+    public GameManager GameManager { get; set; }
+
+}
