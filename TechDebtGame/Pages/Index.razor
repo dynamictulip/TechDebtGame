@@ -101,6 +101,10 @@
                             </GameCardList>
                         </Column>
                     }
+                    else
+                    {
+                        <Column ColumnSize="ColumnSize.Is4"/>
+                    }
                     <Column ColumnSize="ColumnSize.Is4">
                         <GameCardList GameCardListModel="@_gameManager.OutstandingFeaturesCardList">
                             <Heading Size="HeadingSize.Is5" TextColor="TextColor.Secondary">Outstanding Features</Heading>
@@ -131,16 +135,16 @@
 
     private void EndIteration()
     {
+        _gameManager.StartNewIteration();
         if (!_gameManager.GameHasEnded)
         {
-            _gameManager.StartNewIteration();
             ShowEndIterationModal();
         }
     }
 
     private void CardsMoved()
     {
-    //This forces a repaint
+        //This forces a repaint
     }
 
 }

@@ -6,7 +6,7 @@ namespace TechDebtGame.Model
     {
         public OutstandingTechDebtCardList()
         {
-            Cards.AddRange(new[]
+            AddRange(new[]
                 {
                     new TechDebtGameCardModel {Cost = 5, Impact = -5, Scenario = "Refactor core code"},
                     new TechDebtGameCardModel
@@ -17,7 +17,7 @@ namespace TechDebtGame.Model
                 }
             );
         }
-
+        
         public int TechDebtImpact => Cards.OfType<TechDebtGameCardModel>()
             .Sum(d => d.Impact);
 
