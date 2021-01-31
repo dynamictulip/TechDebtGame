@@ -20,11 +20,16 @@ namespace TechDebtGame.Pages
         public List<IterationModel> Iterations { get; } = new List<IterationModel>();
         public IterationModel CurrentIteration => Iterations.Last();
         public IterationModel LastIteration => Iterations.Count > 1 ? Iterations[^2] : IterationModel.Empty;
-        public bool GameHasEnded => Iterations.Count >= MaxIterations;
+
+        public bool GameHasEnded { get; private set; }
+
         public int MaxIterations => 5;
 
         public void StartNewIteration()
         {
+            if (Iterations.Count == MaxIterations)
+                GameHasEnded = true;
+
             if (GameHasEnded)
                 return;
 
