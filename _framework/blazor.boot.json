@@ -6,7 +6,7 @@
   "linkerEnabled": false,
   "resources": {
     "assembly": {
-      "TechDebtGame.dll": "sha256-YCyvSo10ogs8wkTTAFGXQdiZ\/RZ789GgE2gkcdD8xY8=",
+      "TechDebtGame.dll": "sha256-OUQJXybP0XJnE8+iOVTmItCxa5SmubUBN8iKb4+A\/pc=",
       "Blazorise.Icons.FontAwesome.dll": "sha256-RcGmVD6GepoLNUlt0DdL7ME67TycUDtJcWzHJwBUtIA=",
       "Microsoft.AspNetCore.Components.dll": "sha256-PEg9ghiKSWBTX0jq8pFDvv2Yvw92Y8W0ELtWrSE4fhA=",
       "System.Buffers.dll": "sha256-ZxXy75PYbzJxNfAc\/SAP1nUYm4gt1jSaOpFnBb9m85M=",
@@ -62,7 +62,7 @@
       "Microsoft.JSInterop.WebAssembly.dll": "sha256-czNf3btAeBW\/vvID5LAfgcsNZ+GM3ssVuPaMflcg0rs="
     },
     "pdb": {
-      "TechDebtGame.pdb": "sha256-Uuvcp8K09UlqxlL8MQLJ5w4Glt7RjjQoNb4hHJ2yw6o="
+      "TechDebtGame.pdb": "sha256-CzDSFx8xK\/VFErzw4wcUZ\/0eAbXxdZz35sHZenAGBTw="
     },
     "runtime": {
       "dotnet.3.2.0.js": "sha256-mPoqx7XczFHBWk3gRNn0hc9ekG1OvkKY4XiKRY5Mj5U=",
