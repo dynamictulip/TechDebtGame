@@ -2,7 +2,7 @@
 <div>
     @ChildContent
 
-    <ul class="dropzone @dropClass"
+    <ul class="dropzone @_dropClass"
         ondragover="event.preventDefault();"
         ondragstart="event.dataTransfer.setData('', event.target.id);"
         @ondrop="HandleDrop"
@@ -11,7 +11,7 @@
 
         @foreach (var card in GameCardListModel.Cards)
         {
-            <li class="@cardOverride">
+            <li class="@_cardOverride">
                 <GameCard GameCardModel=card />
             </li>
         }
@@ -33,29 +33,29 @@
     [Parameter]
     public GameCardListModel GameCardListModel { get; set; }
 
-    string dropClass = "";
-    string cardOverride = "";
+    string _dropClass = "";
+    string _cardOverride = "";
 
     public void HandleDragEnter(DragEventArgs dragEventArgs)
     {
         if (GameManager.CanMoveCard(Container.Payload, GameCardListModel))
-            dropClass = "can-drop";
+            _dropClass = "can-drop";
         else
         {
-            dropClass = "cannot-drop";
-            cardOverride = "hide";
+            _dropClass = "cannot-drop";
+            _cardOverride = "hide";
         }
     }
 
     public void HandleDragLeave()
     {
-        dropClass = "";
-        cardOverride = "";
+        _dropClass = "";
+        _cardOverride = "";
     }
 
     private async Task HandleDrop()
     {
-        dropClass = "";
+        _dropClass = "";
 
         await Container.UpdateCardAsync(GameCardListModel);
     }

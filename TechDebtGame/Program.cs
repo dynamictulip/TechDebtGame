@@ -16,17 +16,15 @@ namespace TechDebtGame
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddTransient(sp => new HttpClient
-                    {BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)})
-                .AddBlazorise(options => { options.ChangeTextOnKeyPress = true; })
+            builder.Services.AddTransient(_ => new HttpClient
+                { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+            builder.Services
+                .AddBlazorise()
                 .AddBootstrapProviders()
                 .AddFontAwesomeIcons();
-            ;
-
+            
             var host = builder.Build();
-
-            host.Services.UseBootstrapProviders()
-                .UseFontAwesomeIcons();
 
             await host.RunAsync();
         }
