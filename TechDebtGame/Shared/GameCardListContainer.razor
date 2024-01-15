@@ -28,4 +28,30 @@
             await OnStatusUpdated.InvokeAsync(Payload);
     }
 
+    public async Task MoveCardAsync(IGameCardModel card, GameCardListModel currentList)
+    {
+        Payload = card;
+
+        switch (currentList)
+        {
+            case OutstandingTechDebtCardList:
+            case OutstandingFeaturesCardList:
+                await UpdateCardAsync(GameManager.ProposedForIterationCardList);
+                break;
+            default:
+            {
+                if (card is TechDebtGameCardModel)
+                {
+                    await UpdateCardAsync(GameManager.OutstandingTechDebtCardList);
+                }
+                else
+                {
+                    await UpdateCardAsync(GameManager.OutstandingFeaturesCardList);
+                }
+
+                break;
+            }
+        }
+    }
+
 }

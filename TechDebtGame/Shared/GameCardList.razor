@@ -1,23 +1,26 @@
 ﻿@using TechDebtGame.Pages
-<div>
-    @ChildContent
+<CascadingValue Value="GameCardListModel">
+    <div>
+        @ChildContent
 
-    <ul class="dropzone @_dropClass"
-        ondragover="event.preventDefault();"
-        ondragstart="event.dataTransfer.setData('', event.target.id);"
-        @ondrop="HandleDrop"
-        @ondragenter="HandleDragEnter"
-        @ondragleave="HandleDragLeave">
+        <ul class="dropzone @_dropClass"
+            ondragover="event.preventDefault();"
+            ondragstart="event.dataTransfer.setData('', event.target.id);"
+            @ondrop="HandleDrop"
+            @ondragenter="HandleDragEnter"
+            @ondragleave="HandleDragLeave">
 
-        @foreach (var card in GameCardListModel.Cards)
-        {
-            <li class="@_cardOverride">
-                <GameCard GameCardModel=card />
-            </li>
-        }
+            @foreach (var card in GameCardListModel.Cards)
+            {
+                <li class="@_cardOverride">
+                    <GameCard GameCardModel=card
+                              ArrowDirection=GetArrowDirection(card) />
+                </li>
+            }
 
-    </ul>
-</div>
+        </ul>
+    </div>
+</CascadingValue>
 
 @code {
 
@@ -32,6 +35,14 @@
 
     [Parameter]
     public GameCardListModel GameCardListModel { get; set; }
+
+    public GameCard.Arrow GetArrowDirection(IGameCardModel card)
+    {
+        return (card is TechDebtGameCardModel && GameCardListModel is ProposedForIterationCardList)
+               || (card is not TechDebtGameCardModel && GameCardListModel is not ProposedForIterationCardList)
+            ? GameCard.Arrow.Left
+            : GameCard.Arrow.Right;
+    }
 
     string _dropClass = "";
     string _cardOverride = "";
