@@ -1,13 +1,22 @@
-﻿@using Blazorise.Components;
-
-<Card class="@Style" draggable="true" @ondragstart="HandleDragStart">
-    <CardHeader>@(IsTechDebt? GameCardModel.Scenario : "Feature")</CardHeader>
+﻿<Card class="@Style" draggable="true" @ondragstart="HandleDragStart">
+    <CardHeader>@(IsTechDebt ? GameCardModel.Scenario : "Feature")</CardHeader>
     <CardBody>
         <CardText>Cost = @GameCardModel.Cost</CardText>
         @if (GameCardModel is TechDebtGameCardModel techDebtGameCardModel)
         {
             <CardText>Impact = @techDebtGameCardModel.Impact</CardText>
         }
+
+        <Button Color="Color.Primary" Clicked="@OnButtonClicked">
+            @if (ArrowDirection is Arrow.Left)
+            {
+                <Icon Name="IconName.ArrowLeft" />
+            }
+            else
+            {
+                <Icon Name="IconName.ArrowRight" />
+            }
+        </Button>
     </CardBody>
 </Card>
 
@@ -17,17 +26,29 @@
     [CascadingParameter]
     GameCardListContainer Container { get; set; }
 
+    [CascadingParameter]
+    public GameCardListModel GameCardListModel { get; set; }
+
     [Parameter]
     public IGameCardModel GameCardModel { get; set; }
+    
+    [Parameter]
+    public Arrow ArrowDirection { get; set; }
 
+    public enum Arrow
+    {
+        Left,
+        Right
+    }
+    
     [Parameter]
     public string Style
     {
-        get => $"{_style??""} gameCard draggable";
+        get => $"{_style ?? ""} gameCard draggable";
         set => _style = value;
     }
 
-    public bool IsTechDebt => GameCardModel is TechDebtGameCardModel;
+    private bool IsTechDebt => GameCardModel is TechDebtGameCardModel;
 
     protected override void OnParametersSet()
     {
@@ -37,6 +58,11 @@
         {
             _style += " featurecard";
         }
+    }
+
+    private async Task OnButtonClicked()
+    {
+        await Container.MoveCardAsync(GameCardModel, GameCardListModel);
     }
 
     private void HandleDragStart()
